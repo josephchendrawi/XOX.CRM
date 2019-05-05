@@ -1,0 +1,882 @@
+﻿@model CRM.Models.ServiceRequestModel
+@{
+    ViewBag.Title = "Service Request Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+    @Styles.Render("~/Content/fancybox")
+    @Scripts.Render("~/bundles/fancybox")
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        $(function () {
+            $("#tabs-min").tabs({ selected: 2 });
+            $("#tabs-min").on("click", function () { $("#tabs-min").ScrollTo(); });
+        });
+        $('.fancybox').fancybox();
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#birthdate").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+        });
+    </script>
+}
+
+<div id="main_content" class="clearfix form-horizontal view-content">
+    @if (Model.Status == (int)ServiceRequestStatus.Closed)
+    { 
+        <a href="@Url.Action("View","Account", new { id = Model.AccountId })" class="btn btn-primary">Back to Account</a>
+    }
+    else if (Model.Status == (int)ServiceRequestStatus.Open)
+    {
+        <a href="@Url.Action("Cancel", "ServiceRequest", new { ServiceRequestId = Model.ServiceRequestId })" class="btn btn-primary">Cancel Request</a>
+    }
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Category)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetLookupNameByVal(Model.Category, "ServiceRequestCategory")
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Assignee)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.Assignee
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Priority)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((Priority)Model.Priority)
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.DueDate)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.DueDate.ToString("dd MMM yyyy")
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Status)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((ServiceRequestStatus)Model.Status)
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Resolution)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((ServiceRequestResolution)Model.Resolution)
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Description)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.Description
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.ServiceRequestNumber)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.ServiceRequestNumber
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Status != (int)ServiceRequestStatus.Cancelled) { 
+                <div class="line-light"></div>
+                using (Html.BeginForm("Submit", "ServiceRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.HiddenFor(m => m.ServiceRequestId)
+                    @Html.HiddenFor(m => m.MSISDN)
+                    @Html.HiddenFor(m => m.AccountId)
+                    @Html.HiddenFor(m => m.Category)
+                    @Html.HiddenFor(m => m.OldSIMNumber)
+
+                    if (Model.Category == "UpdateCreditLimit")
+                    {
+                        decimal Prime = 0;
+                        decimal CurrentLimit = 0;
+                        if (Model.Status != (int)ServiceRequestStatus.Closed)
+                        {
+                            var subProfile = Helper.GetSubsProfile(Model.AccountId);
+                            var parameter = subProfile.parameter.ToDictionary(v => v.name, v => v.value);
+
+                            Prime = decimal.Parse(parameter["Prime"]);
+                            CurrentLimit = decimal.Parse(parameter["CreditLimit"]);
+                        }
+                        <div id="upgrade-credit-limit">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                                        <div class="col-md-8">
+                                            @Model.MSISDN
+                                        </div>
+                                    </div>
+                                    @if (Model.Status != (int)ServiceRequestStatus.Closed)
+                                    {                                    
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">Current Limit</label>
+                                            <div class="col-md-8">
+                                                @CurrentLimit
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {                                  
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.OldLimit)</label>
+                                            <div class="col-md-8">
+                                                @Model.OldLimit
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.NewLimit)</label>
+                                        <div class="col-md-8">
+                                            @if (Model.Status != (int)ServiceRequestStatus.Closed)
+                                            {
+                                                var GroupCap = Helper.GetLookupValByName(Session["UserGroup"].ToString(), "Credit Limit Max Value");
+                                                var CreditLimitMaxValue = (2 * Prime) + decimal.Parse(GroupCap == "" || GroupCap == "-" ? "0" : GroupCap);
+                                                @Html.TextBoxFor(m => m.NewLimit, new { @class = "form-control inline", @style = "width: 120px;" })
+                                            
+                                                <label class="control-label"> ( equal to or less than RM @CreditLimitMaxValue )</label>
+                                            }
+                                            else
+                                            {
+                                                @Model.NewLimit
+                                                @*@Model.NewLimit*@
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (Model.Category == "SimReplacement")
+                    {
+                        <div id="sim-replacement">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                                        <div class="col-md-8">
+                                            @*@Html.TextBoxFor(m => m.SimMSISDN, new { @class = "form-control" })*@
+                                            @Model.MSISDN
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.OldSIMNumber)</label>
+                                        <div class="col-md-8">
+                                            @Model.OldSIMNumber
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.NewSIMNumber)</label>
+                                        <div class="col-md-8">
+                                            @if (Model.Status != (int)ServiceRequestStatus.Closed)
+                                            {
+                                                @Html.TextBoxFor(m => m.NewSIMNumber, new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Model.NewSIMNumber
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (Model.Category == "UpdateProfile")
+                    {
+                        <div id="sim-replacement">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                                        <div class="col-md-8">
+                                            @Model.MSISDN
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    @if (Model.Status != (int)ServiceRequestStatus.Closed)
+                                    {
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.salutation)</label>
+                                            <div class="col-md-8">
+                                                <select name="SubscriberProfile.salutation" class="btn btn-primary">
+                                                    @foreach (var v in Helper.GetEnumList(typeof(Salutation)))
+                                                    {
+                                                        if (v.Key == Model.SubscriberProfile.salutation)
+                                                        {
+                                                            <option value="@v.Key" selected>@v.Key</option>
+                                                        }
+                                                        else { 
+                                                            <option value="@v.Key">@v.Key</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.name)</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(m => m.SubscriberProfile.name, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.ic)</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(m => m.SubscriberProfile.ic, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.emailAddress)</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(m => m.SubscriberProfile.emailAddress, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.birthDate)</label>
+                                            <div class="col-md-8">
+                                                <div class='input-group'>
+                                                    @Html.TextBoxFor(m => m.SubscriberProfile.birthDate, new { @id = "birthdate", @class = "form-control", @style = "width: 99%;", @Value = Model.SubscriberProfile.birthDate.Value.ToString("dd MMM yyyy") })
+                                                    <div class='input-group-btn pull-left'>
+                                                        <span class="btn btn-primary" onclick="$('#birthdate').datepicker('show')">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.preferredLanguage)</label>
+                                            <div class="col-md-8">
+                                                <select name="SubscriberProfile.preferredLanguage" class="btn btn-primary">
+                                                    @foreach (var v in Helper.GetEnumList(typeof(Language)))
+                                                    {
+                                                        if (v.Key == Model.SubscriberProfile.preferredLanguage)
+                                                        {
+                                                            <option value="@v.Key" selected>@v.Key</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@v.Key">@v.Key</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.salutation) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.salutation)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.salutation
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.name) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.name)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.name
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.ic) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.ic)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.ic
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.emailAddress) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.emailAddress)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.emailAddress
+                                                </div>
+                                            </div>
+                                        }
+                                        if (Model.SubscriberProfile.birthDate != null)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.birthDate)</label>
+                                                <div class="col-md-8">
+                                                    @if (Model.SubscriberProfileBefore.birthDate != null) { 
+                                                        @Model.SubscriberProfileBefore.birthDate.Value.ToString("dd MMM yyyy")
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.preferredLanguage) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.preferredLanguage)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.preferredLanguage
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    @if (Model.Status != (int)ServiceRequestStatus.Closed)
+                                    {
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.postalAddress)</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(m => m.SubscriberProfile.postalAddress, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.postalAddressL2)</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(m => m.SubscriberProfile.postalAddressL2, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.city)</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(m => m.SubscriberProfile.city, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.postalCode)</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(m => m.SubscriberProfile.postalCode, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.state)</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(m => m.SubscriberProfile.state, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.postalAddress) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.postalAddress)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.postalAddress
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.postalAddressL2) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.postalAddressL2)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.postalAddressL2
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.city) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.city)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.city
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.postalCode) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.postalCode)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.postalCode
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.state) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">Old @Html.LabelFor(model => model.SubscriberProfile.state)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfileBefore.state
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+
+                                <div class="col-md-6">
+                                    @if (Model.Status == (int)ServiceRequestStatus.Closed)
+                                    {                                    
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.salutation) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.salutation)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.salutation
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.name) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.name)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.name
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.ic) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.ic)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.ic
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.emailAddress) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.emailAddress)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.emailAddress
+                                                </div>
+                                            </div>
+                                        }
+                                        if (Model.SubscriberProfile.birthDate != null)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.birthDate)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.birthDate.Value.ToString("dd MMM yyyy")
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.preferredLanguage) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.preferredLanguage)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.preferredLanguage
+                                                </div>
+                                            </div>
+                                        }                                    
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.postalAddress) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.postalAddress)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.postalAddress
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.postalAddressL2) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.postalAddressL2)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.postalAddressL2
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.city) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.city)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.city
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.postalCode) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.postalCode)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.postalCode
+                                                </div>
+                                            </div>
+                                        }
+                                        if (string.IsNullOrWhiteSpace(Model.SubscriberProfile.state) == false)
+                                        {
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriberProfile.state)</label>
+                                                <div class="col-md-8">
+                                                    @Model.SubscriberProfile.state
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (Model.Category == "ManageItemisedBilling")
+                    {
+                        <div id="manage-itemised-billing">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                                        <div class="col-md-8">
+                                            @*@Html.TextBoxFor(m => m.SimMSISDN, new { @class = "form-control" })*@
+                                            @Model.MSISDN
+                                        </div>
+                                    </div>
+                                    @if (Model.Status != (int)ServiceRequestStatus.Closed)
+                                    {
+                                        bool CurrentItemisedBilling;
+                                        var subProfile = Helper.GetSubsProfile(Model.AccountId);
+                                        var parameter = subProfile.parameter.ToDictionary(v => v.name, v => v.value);
+
+                                        CurrentItemisedBilling = parameter["PrintedBill"] == "Yes" ? true : false;
+                                        
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">Current Itemised Billing</label>
+                                            <div class="col-md-8">
+                                                @(CurrentItemisedBilling == true ? "Yes" : "No")
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">New @Html.LabelFor(model => model.NewItemisedBilling)</label>
+                                            <div class="col-md-8">
+                                                @Html.RadioButtonFor(m => m.NewItemisedBilling, "True", new { @checked = CurrentItemisedBilling }) Yes 
+                                                <p></p>
+                                                @Html.RadioButtonFor(m => m.NewItemisedBilling, "False", new { @checked = !CurrentItemisedBilling }) No
+                                            </div>
+                                        </div>                                        
+                                    }
+                                    else{
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-4 control-label">Updated Itemised Billing to</label>
+                                            <div class="col-md-8">
+                                                @(Model.NewItemisedBilling == true ? "Yes" : "No")
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (Model.Category == "UpdateDeposit")
+                    {
+                        <div id="sim-replacement">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                                        <div class="col-md-8">
+                                            @*@Html.TextBoxFor(m => m.SimMSISDN, new { @class = "form-control" })*@
+                                            @Model.MSISDN
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@(Model.Status != (int)ServiceRequestStatus.Closed ? "Current Deposit" : "Old Deposit")</label>
+                                        <div class="col-md-8">
+                                            @Model.OldDeposit
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.NewDeposit)</label>
+                                        <div class="col-md-8">
+                                            @if (Model.Status != (int)ServiceRequestStatus.Closed)
+                                            {
+                                                @Html.TextBoxFor(m => m.NewDeposit, new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Model.NewDeposit
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    if (Model.Status != (int)ServiceRequestStatus.Closed)
+                    {
+                        <input type="submit" value="Submit" class="btn btn-primary" />
+                    }
+                }
+            }
+        </div>
+    </div>
+
+    <div id="tabs-min">
+        <ul>
+            <li><a href="#tabs-attachment"><i class="fa fa-files-o"></i><span>Attachment</span></a></li>
+            <li><a href="#tabs-note"><i class="fa fa-book"></i><span>Notes</span></a></li>
+            <li><a href="#tabs-activity"><i class="fa fa-list"></i><span>Activity</span></a></li>
+        </ul>
+
+        <div id="tabs-attachment">
+            @using (Html.BeginForm("EditAttachment", "ServiceRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" id="removedIDs" name="removedIDs" />
+                <div class="row">
+                    @foreach (var v in Model.Attachments)
+                    {
+                        <div class="img-wrapper" id="img-@v.AttachmentId">
+                            @*<span class="fa fa-minus-circle close" onclick="remove_att(@v.AttachmentId)"></span>*@
+                            <a href="@v.FullPath" class="fancybox" title="@v.Path">
+                                <div class="img-box-round">
+                                    @if (v.Type == "IMAGE")
+                                    {
+                                        <img src="@v.FullPath" class="img-responsive-flex img-center" />
+                                    }
+                                    else
+                                    {
+                                        <div class="img-center fa fa-file-text"></div>
+                                    }
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+                
+                if (Model.Status != (int)ServiceRequestStatus.Closed && Model.Status != (int)ServiceRequestStatus.Cancelled)
+                { 
+                    <div class="line"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.Hidden("ServiceRequestId", Model.ServiceRequestId)
+                            <input type="file" name="files" id="files" multiple="multiple" style="display: none;" />
+                            <span class="btn btn-success" id="btn-browse">Add Files</span>
+                            <input type="submit" id="btn-file-submit" value="Done" style="font-family: inherit;" class="btn btn-primary" />
+                        </div>
+                        <div class="col-md-12">
+                            <div id="files-info" class="tabs-infobox"></div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div id="tabs-note">
+            <table class="table table-striped" id="tbl-list-note">
+                <thead>
+                    <tr>
+                        <th style="width: 1px;"></th>
+                        <th class=""><label>Note</label></th>
+                        @*<th class="w50"></th>*@
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="tabs-activity">
+            <table class="table table-striped" id="tbl-list-activity">
+                <thead>
+                    <tr>
+                        <th style="width: 1px;"></th>
+                        <th class=""><label>Description</label></th>
+                        <th class=""><label>Created</label></th>
+                        <th class=""><label>Created By</label></th>
+                        @*<th class="w50"></th>*@
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+    @*@if (Model.Status != (int)ServiceRequestStatus.Closed)
+    {
+        <div class="content-footer">
+            <div>
+                <a href="@Url.Action("Edit","ServiceRequest")?ID=@Model.ServiceRequestId" class="btn btn-primary" role="button">Edit</a>
+            </div>
+        </div>
+    }*@
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        loadListTable();
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list-activity").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListActivity", "ServiceRequest")?ServiceRequestId=@Model.ServiceRequestId",
+            "bProcessing": true,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "aoColumns": [
+                    {
+                        "mData": "ActivityId",
+                        "sName": "ActivityId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='hidden' value='" + Obj.aData['ActivityId'] + "' name='ActivityId[]' />";
+                        },
+                        "sWidth": "0%"
+                    },
+                    {
+                        "mData": "Notes",
+                        "bSortable": false,
+                        "sWidth": "55%"
+                    },
+                    {
+                        "mData": "VisitDateTimeText",
+                        "sWidth": "20%"
+                    },
+                    {
+                        "mData": "FieldStaff",
+                        "sWidth": "25%"
+                    }
+            ]
+        });
+
+        var oTable = $("#tbl-list-note").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListNote", "ServiceRequest")?ServiceRequestId=@Model.ServiceRequestId",
+            "bProcessing": true,
+            "bLengthChange": false,
+            "aoColumns": [
+                    {
+                        "mData": "NoteId",
+                        "sName": "NoteId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='hidden' value='" + Obj.aData['NoteId'] + "' name='NoteId[]' />";
+                        }
+                    },
+                    {
+                        "mData": "Note",
+                        "bSortable": false
+                    }
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            }
+        });
+
+        //add class to jquery.datatables filter
+        $('.dataTables_length select').addClass("btn btn-primary");
+        $('.dataTables_filter input').addClass("form-control");
+    }
+</script>
+
+<script type="text/javascript">
+    $("#btn-browse").click(function () {
+        $("#files").click();
+    });
+
+    function remove_att(id) {
+        $('#img-' + id).remove();
+        $('#removedIDs').val($('#removedIDs').val() + "|" + id);
+    }
+
+    $('#files').change(function () {
+        //var html = "<div class='padding-top-bottom-12'>";
+
+        $('#files-info').html("");
+        var files = $("#files")[0].files;
+        for (var i = 0; i < files.length; i++) {
+            var size;
+            if (files[i].size > 1048576) {
+                size = (files[i].size / 1048576).toFixed(1);
+                size += " MB";
+            }
+            else if (files[i].size > 1024) {
+                size = (files[i].size / 1024).toFixed(1);
+                size += " KB";
+            }
+            else {
+                size = files[i].size;
+                size += " B";
+            }
+
+            var reader = new FileReader();
+            reader.fileName = files[i].name;
+            reader.Size = size;
+            reader.fileType = files[i].name.substring(files[i].name.lastIndexOf('.') + 1);
+            reader.onload = function (e) {
+                var img = "<div class='img-center fa fa-file-text'></div>";
+                var type = e.target.fileType;
+                if (type == "jpg" || type == "jpeg" || type == "png" || type == "gif") {
+                    img = "<img src='" + e.target.result + "' class='img-responsive-flex-landscape img-center' />";
+                }
+                var imghtml = "<div class=\"img-wrapper\">"
+                        + "<a href='" + e.target.result + "' class='fancybox' title='" + e.target.fileName + " - " + e.target.Size + "'>"
+                        + "<div class='img-box-round'>"
+                        + img
+                        + "</div>"
+                        + "</a>"
+                        + "</div>";
+                $('#files-info').append(imghtml);
+            }
+            reader.readAsDataURL(files[i]);
+
+            //html += "<div class='row'><span class='col-xs-4 col-md-1 text-right text-bold-500'>" + size + "</span><span class='col-xs-8 col-md-5'>" + files[i].name + "</span></div>";
+        }
+        //html += "</div>";
+        //html += "<div class='row'><span class='col-xs-4 col-md-1 text-right'><span class='text-primary text-bold'>" + files.length + "</span> file(s)</span></div>";
+
+        //$('#files-info').html(html);
+
+        if (files.length > 0) {
+            $('#btn-file-submit').show();
+        }
+        else {
+            $('#btn-file-submit').hide();
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    $("input#NewLimit").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+            // Allow: Ctrl+A, Command+A
+            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+            // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+            // let it happen, don't do anything
+            return;
+        }
+
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+</script>

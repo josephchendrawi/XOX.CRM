@@ -1,0 +1,218 @@
+﻿@model CRM.Models.OrderListVM
+@{
+    ViewBag.Title = "Registrations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#search").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+        });
+    </script>
+}
+
+@section Title { @ViewBag.List }
+
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="datatable-column-filter">
+                <div>
+                    <select id="filter" class="btn btn-default">
+                        <option value='' disabled selected style='display:none;'>Choose Filter</option>
+                        <option value=''>All Status</option>
+                        @foreach (var i in ViewBag.OrderStatusList)
+                        {
+                            <option value="@i.Value">@i.Key</option>
+                        }
+                    </select>
+                </div>
+                <div class="pull-right" style="padding-top: 10px;">
+                    <select id="search-type" class="btn btn-default">
+                        @*<option value="1">Order Number</option>*@
+                        <option value="2">MSISDN</option>
+                        <option value="3">Full Name</option>
+                        <option value="4">Registration Date</option>
+                        <option value="5">Category</option>
+                        <option value="6">Status</option>
+                    </select>
+                    <input type="text" id="search" class="form-control inline" placeholder="Search" style="padding-bottom: 10px;" />
+                    <span id="datefilter" class="btn btn-primary" style="display:none;" onclick="$('#search').datepicker('show')">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    <button id="btn-search" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+
+            <table class="table table-striped table-compact" id="tbl-list">
+                <thead>
+                    <tr>
+                        <th class="w50"></th>
+                        <th class="">@Html.LabelFor(model => model.OrderNum)</th>
+                        <th class="">@Html.LabelFor(model => model.MSISDN)</th>
+                        <th class="">@Html.LabelFor(model => model.FullName)</th>
+                        <th class="">@Html.LabelFor(model => model.SubmissionDate)</th>
+                        <th class="">@Html.LabelFor(model => model.Category)</th>
+                        <th class="">@Html.LabelFor(model => model.Status)</th>
+                        <th class=""></th>
+                        <th class=""></th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        loadListTable();
+
+        $("#tbl-list").on("click", "[name='viewBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='OrderId[]']").val();
+
+            window.location.href = "@Url.Action("View", "Order")/" + Id;
+        })
+        
+
+        $("#tbl-list").on("click", "[name='processBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='OrderId[]']").val();
+
+            window.location.href = "@Url.Action("Process", "Order")/" + Id;
+        })
+
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListOrder", "Order")",
+            "bProcessing": true,
+            "iDisplayLength": 50,
+            "bStateSave": true,
+            "pagingType": "full_numbers",
+            "aoColumns": [
+                    {
+                        "mData": "OrderId",
+                        "sName": "OrderId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return Obj.aData['Idx'] + "<input type='hidden' value='" + Obj.aData['OrderId'] + "' name='chk_OrderId[]' />" +
+                                "<input type='hidden' value='" + Obj.aData['OrderId'] + "' name='OrderId[]' />";
+                        }
+                    },
+                    { "mData": "OrderNum" },
+                    { "mData": "MSISDN" },
+                    { "mData": "FullName" },
+                    { "mData": "SubmissionDate" },
+                    { "mData": "Category" },
+                    { "mData": "Status" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="viewBtn[]">' +
+                                '<i class="fa fa-eye"></i> View</a>';
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="processBtn[]">' +
+                                '<i class="fa fa-exchange"></i> Process</a>';
+                        }
+                    }
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            }
+        });
+
+        //hide filter box
+        $('.dataTables_filter').hide();
+        //add class to jquery.datatables filter
+        $('.dataTables_length select').addClass("btn btn-default");
+        $('.dataTables_filter input').addClass("form-control");
+        
+
+        $('select#filter').on('change', function (e) {
+            var optionSelected = $("option:selected", this).html();
+            var valueSelected = this.value;
+
+            if (valueSelected != '') {
+                oTable.fnFilter("6" + optionSelected);
+            }
+            else {
+                oTable.fnFilter('');
+            }
+        });
+        $("select#filter option").each(function () {
+            if ($('.dataTables_filter input').val().substr(1) == this.value) {
+                $(this).attr('selected', true);
+            }
+        });
+
+        //$('input#search').keyup(function () {
+        //    var optionSelected = $("#search-type option:selected").val();
+
+        //    oTable.fnFilter(optionSelected + $(this).val());
+        //});
+        $('select#search-type').on('change', function (e) {
+            var optionSelected = $("option:selected", this).html();
+            var valueSelected = this.value;
+        //    var query = $('input#search').val();
+
+        //    oTable.fnFilter(valueSelected + query);
+            if (valueSelected == '4') {
+                $('#datefilter').show();
+                $("#search").prop("readonly", true);
+                $("#search").width(150);
+            }
+            else {
+                $('#datefilter').hide();
+                $("#search").prop("readonly", false);
+                $("#search").width(224);
+            }
+            console.log($("#search").width());
+        });
+
+        $('button#btn-search').on('click', function (e) {
+            var optionSelected = $("#search-type option:selected").val();
+            var query = $('input#search').val();
+
+            oTable.fnFilter(optionSelected + query);
+        });
+        $('input#search').keyup(function (event) {
+            if (event.keyCode == 13) {
+                $("button#btn-search").click();
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5653cb56dd0e4523b1bc391bd6fea971" Name="Diagram1" ZoomLevel="86">
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ACCNT_ATT" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ACCNT_NOTE" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ASSET_CON" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ASSET_OM" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_AUDIT_LOG" Width="1.5" PointX="8.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_AUDIT_TRAIL" Width="1.5" PointX="8.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_CON_ACCNT" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_CON_ADDR" Width="1.5" PointX="2.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_CONTACT" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_DEMAND_LST" Width="1.5" PointX="4.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_GROUP" Width="1.5" PointX="10.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_GROUP_ACCESS" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_LKP_GENERAL" Width="1.5" PointX="12.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_MODULE" Width="1.5" PointX="12.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ORDER" Width="1.5" PointX="6.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ORDER_ATT" Width="1.5" PointX="0.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ORDER_ITEM_OM" Width="1.5" PointX="14.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ORDER_NOTE" Width="1.5" PointX="8.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_PROD_ATTR" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_PROD_ISP" Width="1.5" PointX="16.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_PROD_ITEM" Width="1.5" PointX="16.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_PROD_OM" Width="1.5" PointX="12.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_SRV_ACT" Width="1.5" PointX="16.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_SRV_ATT" Width="1.5" PointX="2.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_SRV_KEYVAL" Width="1.5" PointX="14.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_SRV_NOTE" Width="1.5" PointX="16.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_SRV_TIC" Width="1.5" PointX="18.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_USER_GROUP" Width="1.5" PointX="18.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_USER_GROUP_DEPT" Width="1.5" PointX="18.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_VAL_LST" Width="1.5" PointX="18.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_VAL_MST" Width="1.5" PointX="6.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ACCNT_BANK" Width="1.5" PointX="21.375" PointY="0.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_IS_KEY" Width="1.5" PointX="0.75" PointY="21.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ACCNT_ACT" Width="1.5" PointX="21.375" PointY="9.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ACCNT_REV" Width="1.5" PointX="21.375" PointY="13.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_REV_NUM" Width="1.5" PointX="13.375" PointY="21.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ORDER_ITEM" Width="1.5" PointX="15.375" PointY="21.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_USER" Width="1.5" PointX="21.375" PointY="5.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ADDR" Width="1.5" PointX="21.375" PointY="17.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_PROD" Width="1.5" PointX="9.375" PointY="19.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ASSET" Width="1.5" PointX="23.375" PointY="0.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ACCNT" Width="1.5" PointX="3.375" PointY="21.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ORDER_AUDIT" Width="1.5" PointX="5.375" PointY="23.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ORDER_ACT" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ACCNT_PAYMENT" Width="1.5" PointX="17.375" PointY="22.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_BATCHWORK_LOG" Width="1.5" PointX="23.375" PointY="11.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_BATCHWORK" Width="1.5" PointX="23.375" PointY="6.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_BILL_PAYMENT" Width="1.5" PointX="5.625" PointY="34.75" />
+        <AssociationConnector Association="XOX.CRM.Lib.FK_BILL_PAYMENT_ACCNT" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_ACCNT_REFUND" Width="1.5" PointX="5.625" PointY="40.875" />
+        <AssociationConnector Association="XOX.CRM.Lib.FK_XOX_T_ACCNT_REFUND" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_PAYMENT_COLLECTED" Width="1.5" PointX="23.375" PointY="15.75" />
+        <EntityTypeShape EntityType="XOX.CRM.Lib.XOX_T_BATCHWORK_EMAIL" Width="1.5" PointX="23.375" PointY="19.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

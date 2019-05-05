@@ -1,0 +1,478 @@
+﻿@model CRM.Models.AccountModel
+@{
+    ViewBag.Title = "Account Details Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+@Styles.Render("~/Content/fancybox")
+@Scripts.Render("~/bundles/fancybox")
+
+<script type="text/javascript">
+    $(function () {
+        $("#tabs-min").tabs();
+        $("#tabs-min").on("click", function () { $("#tabs-min").ScrollTo(); });
+    });
+
+    $(document).ready(function () {
+        $("#birthdate").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd M yy',
+            showAnim: 'slideDown',
+            showOn: '',
+            showOtherMonths: true,
+            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        });
+    });
+    $('.fancybox').fancybox();
+</script>
+}
+
+<div id="main_content" class="clearfix form-horizontal">
+    @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(model => model.AccountId)
+        @Html.HiddenFor(model => model.AddressInfo.AddressId)
+        
+        @Html.Hidden("ReturnURL", Request.QueryString["ReturnURL"]);
+        
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-user"></i> <label class="title">Personal Information</label></h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Salutation) / @Html.LabelFor(model => model.PersonalInfo.FullName)</label>
+                        <div class="col-md-8">
+                            <div class="input-group" id="Salutation">
+                                <div class="input-group-btn">
+                                    @Html.DropDownListForEnum(m => m.PersonalInfo.Salutation, typeof(Salutation), new { @class = "btn btn-primary" })
+                                </div>
+                                @Html.TextBoxFor(m => m.PersonalInfo.FullName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.BirthDate)</label>
+                        <div class="col-md-8">
+                            <div class='input-group'>
+                                @Html.TextBoxFor(m => m.PersonalInfo.BirthDate, new { @id = "birthdate", @class = "form-control", @Value = Model.PersonalInfo.BirthDate.ToString("dd MMM yyyy"), @style = "width: 85%;" })
+                                <div class='input-group-btn pull-left'>
+                                    <span class="btn btn-primary" onclick="$('#birthdate').datepicker('show')">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Gender)</label>
+                        <div class="col-md-8">
+                            @Html.RadioButtonForEnum(m => m.PersonalInfo.Gender, typeof(Gender), new { data_val_number = "This field is required" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.IdentityType)</label>
+                        <div class="col-md-8">
+                            <span id="IdentityType">
+                                @Html.DropDownListForEnum(m => m.PersonalInfo.IdentityType, typeof(IdentityType), new { @class = "btn btn-primary" })
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.IdentityNo)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.IdentityNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.MotherMaidenName)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.MotherMaidenName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Email)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.Email, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.ContactNumber)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.ContactNumber, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Nationality)</label>
+                        <div class="col-md-8">
+                            @Html.DropDownListForKeyPairList(m => m.PersonalInfo.Nationality, "Nationality", new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Race)</label>
+                        <div class="col-md-8">
+                            @Html.DropDownListForKeyPairList(m => m.PersonalInfo.Race, "Race", new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.PreferredLanguage)</label>
+                        <div class="col-md-8">
+                            <span id="PreferredLanguage">
+                                @Html.DropDownListForEnum(m => m.PersonalInfo.PreferredLanguage, typeof(Language), new { @class = "btn btn-primary" })
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Grade)</label>
+                        <div class="col-md-8">
+                            <span id="Grade">
+                                @Html.DropDownListForEnum(m => m.Grade, typeof(AccountGrade), new { @class = "btn btn-primary" })
+                            </span>
+                            @*<span id="GradeIndicator" style="color:@(((AccountGrade)Model.Grade).ToString())">
+                                <i class="fa fa-circle"></i>
+                            </span>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.RegistrationDate)</label>
+                        <div class="col-md-8">
+                            @if (Model.RegistrationDate != null) { 
+                                @Html.TextBoxFor(m => m.RegistrationDate, new { @class = "form-control", @readonly = "readonly", @Value = Model.RegistrationDate.Value.ToString("dd MMM yyyy") })
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.SponsorPersonnel)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.SponsorPersonnel, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.CreditLimit)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.CreditLimit, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.CustomerStatus)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.CustomerStatus, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.CustomerAccountNumber)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.CustomerAccountNumber, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.MSISDNNumber)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PersonalInfo.MSISDNNumber, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.SIMSerialNumber)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.SIMSerialNumber, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div id="tabs-min">
+        <ul>
+            @*@if (Model.AccountType == (int)AccountType.PrincipalLine) {*@ 
+                <li><a href="#tabs-banking"><i class="fa fa-money"></i><span>Banking Info</span></a></li>
+            @*}*@
+            <li><a href="#tabs-address"><i class="fa fa-road"></i><span>Address</span></a></li>
+            <li><a href="#tabs-files"><i class="fa fa-files-o"></i><span>Files</span></a></li>
+        </ul>
+        @*@if (Model.AccountType == (int)AccountType.PrincipalLine) {*@
+        <div id="tabs-banking">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CardType)</label>
+                        <div class="col-md-8">
+                            @Html.RadioButtonForEnum(m => m.BankingInfo.CardType, typeof(CardType), new { data_val_number = "This field is required" }, GroupPosition.Left, true)
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CreditCardNo)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.BankingInfo.CreditCardNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CardHolderName)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.BankingInfo.CardHolderName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CardExpiryMonth)</label>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.BankingInfo.CardExpiryMonth, new SelectList(Enumerable.Range(1, 12)), "Month", new { @class = "btn btn-primary" })
+                            @Html.DropDownListFor(m => m.BankingInfo.CardExpiryYear, new SelectList(Helper.GetYearList()), "Year", new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CardIssuerBank)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.BankingInfo.CardIssuerBank, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.ThirdPartyFlag)</label>
+                        <div class="col-md-8">
+                            <span id="ThirdPartyFlag">
+                                @Html.DropDownListForEnum(m => m.BankingInfo.ThirdPartyFlag, typeof(Flag), new { @class = "btn btn-primary" })
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.BankName)</label>
+                        <div class="col-md-8">
+                            @Html.DropDownListForKeyPairList(m => m.BankingInfo.BankName, "Bank Name", new { @class = "btn btn-default", @style = "width: 300px;" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.BankAccountNumber)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.BankingInfo.BankAccountNumber, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.BankAccountName)</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.BankingInfo.BankAccountName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*}*@
+        <div id="tabs-address">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box-header with-border margin">
+                        <h3 class="box-title"><i class="fa fa-home"></i> @Html.LabelFor(model => model.AddressInfo)</h3>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.AddressLine1)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.AddressInfo.AddressLine1, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.AddressLine2)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.AddressInfo.AddressLine2, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.City)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.AddressInfo.City, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.State)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.DropDownListForKeyPairList(m => m.AddressInfo.State, "States", new { @class = "btn btn-default", @style = "width: 250px;" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.Postcode)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.AddressInfo.Postcode, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.Country)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.AddressInfo.Country, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                @if (Model.BillingAddressInfo != null && Model.BillingAddressInfo.AddressId != 0 && Model.AccountType == (int)AccountType.PrincipalLine)
+                {                    
+                @Html.HiddenFor(model => model.BillingAddressInfo.AddressId)
+                <div class="col-md-6">
+                    <div class="box-header with-border margin">
+                        <h3 class="box-title"><i class="fa fa-home"></i> @Html.LabelFor(model => model.BillingAddressInfo)</h3>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.AddressLine1)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.BillingAddressInfo.AddressLine1, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.AddressLine2)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.BillingAddressInfo.AddressLine2, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.City)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.BillingAddressInfo.City, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.State)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.DropDownListForKeyPairList(m => m.BillingAddressInfo.State, "States", new { @class = "btn btn-default", @style = "width: 250px;" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.Postcode)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.BillingAddressInfo.Postcode, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.Country)</label>
+                        <div class="col-md-8 text-offset">
+                            @Html.TextBoxFor(m => m.BillingAddressInfo.Country, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+        <div id="tabs-files">
+            <input type="hidden" id="removedIDs" name="removedIDs" />
+            <div class="row">
+                @foreach (var v in Model.Files)
+                {
+                    <div class="img-wrapper" id="img-@v.FileId">
+                        <span class="fa fa-minus-circle close" onclick="deleteFile(@v.FileId)"></span>
+                        <a href="~/Account/GetFile?filepath=@v.Path" class="fancybox" title="@v.Path">
+                            <div class="img-box-round">
+                                @if (v.Type == "IMAGE")
+                                {
+                                    <img src="~/Account/GetFile?filepath=@v.Path" class="img-responsive-flex img-center" />
+                                }
+                                else
+                                {
+                                    <div class="img-center fa fa-file-text"></div>
+                                }
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+            <div class="line"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="file" name="files" id="files" multiple="multiple" style="display: none;" />
+                    <span class="btn btn-success" id="btn-browse">Add Files</span>
+                </div>
+                <div class="col-md-12">
+                    <div id="files-info" class="tabs-infobox"></div>
+                </div>
+            </div>
+        </div>
+	</div>
+          
+    <div class="content-footer">      
+        <div>
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </div>
+    </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $("#btn-browse").click(function () {
+        $("#files").click();
+    });
+
+    function deleteFile(id) {
+        $('#img-' + id).remove();
+        $('#removedIDs').val($('#removedIDs').val() + "|" + id);
+    }
+
+    $('#files').change(function () {
+        //var html = "<div class='padding-top-bottom-12'>";
+
+        $('#files-info').html("");
+        var files = $("#files")[0].files;
+        for (var i = 0; i < files.length; i++) {
+            var size;
+            if (files[i].size > 1048576) {
+                size = (files[i].size / 1048576).toFixed(1);
+                size += " MB";
+            }
+            else if (files[i].size > 1024) {
+                size = (files[i].size / 1024).toFixed(1);
+                size += " KB";
+            }
+            else {
+                size = files[i].size;
+                size += " B";
+            }
+
+            var reader = new FileReader();
+            reader.fileName = files[i].name;
+            reader.Size = size;
+            reader.fileType = files[i].name.substring(files[i].name.lastIndexOf('.') + 1);
+            reader.onload = function (e) {
+                var img = "<div class='img-center fa fa-file-text'></div>";
+                var type = e.target.fileType;
+                if (type == "jpg" || type == "jpeg" || type == "png" || type == "gif") {
+                    img = "<img src='" + e.target.result + "' class='img-responsive-flex-landscape img-center' />";
+                }
+                var imghtml = "<div class=\"img-wrapper\">"
+                        + "<a href='" + e.target.result + "' class='fancybox' title='" + e.target.fileName + " - " + e.target.Size + "'>"
+                        + "<div class='img-box-round'>"
+                        + img
+                        + "</div>"
+                        + "</a>"
+                        + "</div>";
+                $('#files-info').append(imghtml);
+            }
+            reader.readAsDataURL(files[i]);
+
+            //html += "<div class='row'><span class='col-xs-4 col-md-1 text-right text-bold-500'>" + size + "</span><span class='col-xs-8 col-md-5'>" + files[i].name + "</span></div>";
+        }
+        //html += "</div>";
+        //html += "<div class='row'><span class='col-xs-4 col-md-1 text-right'><span class='text-primary text-bold'>" + files.length + "</span> file(s)</span></div>";
+
+        //$('#files-info').html(html);
+    });
+
+    
+    $('select#Grade').on('change', function (e) {
+        var optionSelected = $("option:selected", this).html();
+        var valueSelected = this.value;
+        
+        $('#GradeIndicator').css({ 'color': optionSelected });
+        console.log(optionSelected);
+    });
+</script>

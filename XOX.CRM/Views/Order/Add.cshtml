@@ -1,0 +1,74 @@
+﻿@model XOX.CRM.Lib.OrderVO
+@{
+    ViewBag.Title = "Order Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+
+}
+
+<div id="main_content" class="clearfix form-horizontal">
+    @using (Html.BeginForm("Add", "Order", FormMethod.Post))
+    {
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-file-text"></i> <label class="title">Order Information</label></h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.CUST_REP_ID)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.CUST_REP_ID, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.CustomerAccountId)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.CustomerAccountId, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.ASSIGNEE)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.ASSIGNEE, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.ORDER_SOURCE)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.ORDER_SOURCE, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.ORDER_TYPE)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.ORDER_TYPE, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.ORDER_NUM)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.ORDER_NUM, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.ORDER_STATUS)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.ORDER_STATUS, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-footer">
+            <div>
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,111 @@
+﻿@model CRM.Models.MobileNumModel
+@{
+    ViewBag.Title = "Mobile Number List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+}
+
+@section Title { @ViewBag.List }
+
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                <a href="@Url.Action("Add","MobileNum")">
+                    <button class="btn btn-success pull-right" style="margin-right:7px">
+                        <i class="fa fa-plus-circle"></i>Upload Batch File
+                    </button>
+                </a>
+            </div>
+
+            <div class="line-light"></div>
+
+            <table class="table table-striped" id="tbl-list">
+                <thead>
+                    <tr>
+                        <th class="w50"></th>
+                        <th class="">@Html.LabelFor(model => model.MSISDN)</th>
+                        <th class="">@Html.LabelFor(model => model.Price)</th>
+                        <th class="">@Html.LabelFor(model => model.BatchNum)</th>
+                        <th class="">@Html.LabelFor(model => model.CreatedDate)</th>
+                        <th class=""></th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        loadListTable();
+
+        $("#tbl-list").on("click", "[name='editBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='MobileNumId[]']").val();
+
+            window.location.href = "@Url.Action("Edit", "MobileNum")/" + Id;
+        })
+
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListMobileNum", "MobileNum")",
+            "bProcessing": true,
+            "aaSorting": [[4, 'desc']],
+            "aoColumns": [
+                    {
+                        "mData": "MobileNumId",
+                        "sName": "MobileNumId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='checkbox' value='" + Obj.aData['MobileNumId'] + "' name='chk_MobileNumId[]' />" +
+                                "<input type='hidden' value='" + Obj.aData['MobileNumId'] + "' name='MobileNumId[]' />";
+                        }
+                    },
+                    { "mData": "MSISDN" },
+                    {
+                        "mData": "Price",
+                        "fnRender": function (Obj) {
+                            return "RM " + Obj.aData['Price'];
+                        }
+                    },
+                    { "mData": "BatchNum" },
+                    { "mData": "CreatedDate" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="editBtn[]">' +
+                                '<i class="fa fa-edit"></i> Edit</a>';
+                        }
+                    }
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            }
+        });
+
+        //add class to jquery.datatables filter
+        $('.dataTables_length select').addClass("btn btn-primary");
+        $('.dataTables_filter input').addClass("form-control");
+    }
+</script>
+

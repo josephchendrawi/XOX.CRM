@@ -1,0 +1,73 @@
+﻿@model CRM.Models.ModuleModel
+@{
+    ViewBag.Title = "Module View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+
+}
+
+<div id="main_content" class="clearfix form-horizontal view-content">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-file-text"></i> <label class="title">Module Information</label></h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group clearfix">
+                        <label class="col-xs-4 control-label">@Html.LabelFor(model => model.ModuleCode)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.ModuleCode
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.ModuleName)</label>
+                        <div class="col-md-8 text-offset" ">
+                            @Model.ModuleName
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group clearfix">
+                        <label class="col-xs-4 control-label">@Html.LabelFor(model => model.IsViewable)</label>
+                        <div class="col-xs-8 text-offset" ">
+                            @Model.IsViewable
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-xs-4 control-label">@Html.LabelFor(model => model.IsAddable)</label>
+                        <div class="col-xs-8 text-offset" ">
+                            @Model.IsAddable
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-xs-4 control-label">@Html.LabelFor(model => model.IsEditable)</label>
+                        <div class="col-xs-8 text-offset" ">
+                            @Model.IsEditable
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-xs-4 control-label">@Html.LabelFor(model => model.IsDeleteable)</label>
+                        <div class="col-xs-8 text-offset" ">
+                            @Model.IsDeleteable
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-xs-4 control-label">@Html.LabelFor(model => model.IsApprovable)</label>
+                        <div class="col-xs-8 text-offset" ">
+                            @Model.IsApprovable
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-xs-4 control-label">@Html.LabelFor(model => model.IsRejectable)</label>
+                        <div class="col-xs-8 text-offset" ">
+                            @Model.IsRejectable
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

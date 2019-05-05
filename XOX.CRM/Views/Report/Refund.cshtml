@@ -1,0 +1,227 @@
+﻿
+@{
+    ViewBag.Title = "Refund";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model CRM.Models.RefundModel
+@section Title { @ViewBag.List }
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#From").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+            $("#To").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+        });
+    </script>
+}
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-body">
+            <div id="searchForm" style="display: none;">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6" style="padding: 0;">
+                        <label class="control-label">From</label>
+                        <div class='input-group'>
+                            <input type="text" class="form-control" readonly id="From" style="width : 90%" />
+                            <div class='input-group-btn pull-left'>
+                                <span class="btn btn-primary" onclick="$('#From').datepicker('show')">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6" style="padding: 0;">
+                        <label class="control-label">To</label>
+                        <br />
+                        <div class='input-group'>
+                            <input type="text" class="form-control" readonly id="To" style="width : 90%" />
+                            <div class='input-group-btn pull-left'>
+                                <span class="btn btn-primary" onclick="$('#To').datepicker('show')">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <button class="btn btn-default" id="btn-search"><i class="fa fa-search"></i> Search</button>
+            <button class="btn btn-default" id="btn-download"><i class="fa fa-download"></i> Download Report</button>
+            <br />
+            <br />
+            @using (Html.BeginForm("UploadRefundReport", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="file" name="files" id="files" accept=".csv" style="display: none;" onchange="javascript:this.form.submit();" />
+                <span class="btn btn-success" id="btn-browse">Upload Refund Report (CSV)</span>
+            }
+
+            <div class="line-light"></div>
+
+            @if (TempData["FailedData"] != null)
+            {
+                <b>Failed Data</b>
+                foreach (var v in TempData["FailedData"] as List<string>)
+                {
+                    <div>@v</div>
+                }
+                
+                <div class="line-light"></div>
+            }
+
+            <table class="table table-striped table-compact" id="tbl-list">
+                <thead>
+                    <tr>
+                        <th class="">@Html.LabelFor(model => model.Name)</th>
+                        <th class="">@Html.LabelFor(model => model.MSISDN)</th>
+                        <th class="">@Html.LabelFor(model => model.PlanType)</th>
+                        <th class="">@Html.LabelFor(model => model.TerminationDate)</th>
+                        <th class="">@Html.LabelFor(model => model.Deposit)</th>
+                        <th class="">@Html.LabelFor(model => model.AdvancePayment)</th>
+                        <th class="">@Html.LabelFor(model => model.BillPayment)</th>
+                        <th class="">@Html.LabelFor(model => model.Usage)</th>
+                        <th class="">@Html.LabelFor(model => model.TotalRefund)</th>
+                        <th class="">@Html.LabelFor(model => model.RefundDate)</th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- datatable -->
+<script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+<script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+<link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+    $(function () {
+        loadListTable();
+
+        $("#btn-browse").click(function () {
+            $("#files").click();
+        });
+
+        $("#btn-download").click(function () {
+            var From = $('#From').val();
+            var To = $('#To').val();
+
+            var parameter = "?From=" + From + "&To=" + To;
+
+            window.location.href = "@Url.Action("GetRefundExcel", "Report")" + parameter;
+        });
+    });
+
+
+    function loadListTable() {
+        var oTable = $("#tbl-list").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListRefund", "Report")",
+            "bProcessing": true,
+            "iDisplayLength": 50,
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('DataTablesBillPayment', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('DataTablesBillPayment'));
+            },
+            "sDom": 'ir<"top"lp>t<"bottom"><"clear">',
+            "aoColumns": [
+                    {
+                        "mData": "Name",
+                        "sWidth": "20%"
+                    },
+                    {
+                        "mData": "MSISDN",
+                        "sWidth": "10%"
+                    },
+                    {
+                        "mData": "PlanType",
+                        "sWidth": "10%"
+                    },
+                    {
+                        "mData": "TerminationDate",
+                        "sWidth": "10%"
+                    },
+                    {
+                        "mData": "Deposit",
+                        "sWidth": "6%"
+                    },
+                    {
+                        "mData": "AdvancePayment",
+                        "sWidth": "10%"
+                    },
+                    {
+                        "mData": "BillPayment",
+                        "sWidth": "8%"
+                    },
+                    {
+                        "mData": "Usage",
+                        "sWidth": "8%"
+                    },
+                    {
+                        "mData": "TotalRefund",
+                        "sWidth": "8%"
+                    },
+                    {
+                        "mData": "RefundDate",
+                        "sWidth": "10%"
+                    },
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            },
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                var From = $('#From').val();
+                var To = $('#To').val();
+
+                var parameter = "?From=" + From + "&To=" + To;
+
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource + parameter,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            }
+        });
+
+        //hide filter box
+        $('.dataTables_filter').hide();
+        //add class to jquery.datatables filter
+        $('.dataTables_length select').addClass("btn btn-default");
+        $('.dataTables_filter input').addClass("form-control");
+
+        $("#btn-search").click(function () {
+            if ($('#searchForm').is(':visible') == false) {
+                $('#searchForm').show("blind");
+            }
+            else {
+                oTable.fnDraw();
+            }
+        });
+    }
+</script>

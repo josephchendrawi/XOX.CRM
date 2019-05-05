@@ -1,0 +1,2 @@
+alter table [XOX_T_BATCHWORK]
+add FLG_SEND_EMAIL_NOTIF bit

@@ -1,0 +1,180 @@
+﻿@model CRM.Models.GroupAccessVM
+@{
+    ViewBag.Title = "Access Control";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+}
+
+<div id="main_content" class="clearfix form-horizontal">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-info"></i> <label class="title">Access Control Information</label></h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            @using (Html.BeginForm("AccessControl", "Setting", FormMethod.Post))
+            {
+                <input type="hidden" value="" name="UserGroupId" id="UserGroupId" />
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <select class="btn btn-primary" id="usergroups">
+                            <option disabled selected style='display:none;'>Choose</option>
+                            @foreach (var v in Model.UserGroups) { 
+                                <option value="@v.Id">@v.GroupCode</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-10">
+                        <table class="table table-striped" id="tbl-list">
+                            <thead>
+                                <tr>
+                                    <th class="">@Html.LabelFor(model => model.Modules[0].ModuleCode)</th>
+                                    <th class=""><a onclick="SelectAllByOperation('isviewable')">@Html.LabelFor(model => model.Modules[0].IsViewable)</a></th>
+                                    <th class=""><a onclick="SelectAllByOperation('isaddable')">@Html.LabelFor(model => model.Modules[0].IsAddable)</a></th>
+                                    <th class=""><a onclick="SelectAllByOperation('iseditable')">@Html.LabelFor(model => model.Modules[0].IsEditable)</a></th>
+                                    <th class=""><a onclick="SelectAllByOperation('isdeleteable')">@Html.LabelFor(model => model.Modules[0].IsDeleteable)</a></th>
+                                    <th class=""><a onclick="SelectAllByOperation('isapprovable')">@Html.LabelFor(model => model.Modules[0].IsApprovable)</a></th>
+                                    <th class=""><a onclick="SelectAllByOperation('isrejectable')">@Html.LabelFor(model => model.Modules[0].IsRejectable)</a></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var v in Model.Modules)
+                                {
+                                    <tr>
+                                        <td><a onclick="SelectAllById('@v.Id')">@v.ModuleCode</a></td>
+                                        <td>
+                                        @if (v.IsViewable == true)
+                                        {
+                                            <input type="checkbox" id="@v.Id-isviewable" name="@v.Id-isviewable" />
+                                        }
+                                        </td>
+                                        <td>
+                                        @if (v.IsAddable == true)
+                                        {
+                                            <input type="checkbox" id="@v.Id-isaddable" name="@v.Id-isaddable" />
+                                        }
+                                        </td>
+                                        <td>
+                                        @if (v.IsEditable == true)
+                                        {
+                                            <input type="checkbox" id="@v.Id-iseditable" name="@v.Id-iseditable" />
+                                        }
+                                        </td>
+                                        <td>
+                                        @if (v.IsDeleteable == true)
+                                        {
+                                            <input type="checkbox" id="@v.Id-isdeleteable" name="@v.Id-isdeleteable" />
+                                        }
+                                        </td>
+                                        <td>
+                                        @if (v.IsApprovable == true)
+                                        {
+                                            <input type="checkbox" id="@v.Id-isapprovable" name="@v.Id-isapprovable" />
+                                        }
+                                        </td>
+                                        <td>
+                                        @if (v.IsRejectable == true)
+                                        {
+                                            <input type="checkbox" id="@v.Id-isrejectable" name="@v.Id-isrejectable" />
+                                        }
+                                        </td>
+                                    </tr> 
+                                }
+                            </tbody>
+                        </table>
+
+                        <div>
+                            <input type="submit" value="Submit" class="btn btn-primary" disabled />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('input[type="submit"]').attr("disabled", true);
+        $('#tbl-list input[type="checkbox"]').attr("disabled", true);
+        $('#tbl-list a').addClass('disabled');
+
+        //refresh
+        $('#tbl-list input[type="checkbox"]').iCheck('uncheck');
+    });
+
+    $('select#usergroups').change(function () {
+        $('input[type="submit"]').removeAttr("disabled");
+        $('#tbl-list input[type="checkbox"]').removeAttr("disabled");
+        $('#tbl-list a').removeClass('disabled');
+
+        //refresh
+        $('#tbl-list input[type="checkbox"]').iCheck('uncheck');
+
+        //set id to hidden input
+        $('input#UserGroupId').val(this.value);
+
+        $.ajax({
+            url: '@Url.Action("AjaxGetUserGroupAccess","Setting")' + '?UserGroupId=' + this.value,
+            dataType: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+                $.each(data, function (i, item) {
+                    if (item['IsViewable'] == true) {
+                        $('input#' + item['Id'] + '-isviewable').iCheck('check');
+                    }
+                    if (item['IsAddable'] == true) {
+                        $('input#' + item['Id'] + '-isaddable').iCheck('check');
+                    }
+                    if (item['IsEditable'] == true) {
+                        $('input#' + item['Id'] + '-iseditable').iCheck('check');
+                    }
+                    if (item['IsDeleteable'] == true) {
+                        $('input#' + item['Id'] + '-isdeleteable').iCheck('check');
+                    }
+                    if (item['IsApprovable'] == true) {
+                        $('input#' + item['Id'] + '-isapprovable').iCheck('check');
+                    }
+                    if (item['IsRejectable'] == true) {
+                        $('input#' + item['Id'] + '-isrejectable').iCheck('check');
+                    }
+                });
+            },
+            error: function (xhr) {
+                alert('error');
+            }
+        });
+
+    });
+
+    function SelectAllByOperation(operation) {
+        if ($("#tbl-list input[id*='" + operation + "']:checked").length == $("input[id*='" + operation + "']").length) {
+            $("#tbl-list input[id*='" + operation + "']").iCheck('uncheck');
+        }
+        else {
+            $("#tbl-list input[id*='" + operation + "']").iCheck('check');
+        }
+    }
+
+    function SelectAllById(id) {
+        if ($("#tbl-list input[id*='" + id + "']:checked").length == $("input[id*='" + id + "']").length) {
+            $("#tbl-list input[id*='" + id + "']").iCheck('uncheck');
+        }
+        else {
+            $("#tbl-list input[id*='" + id + "']").iCheck('check');
+        }
+    }
+
+</script>
+

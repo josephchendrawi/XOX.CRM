@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{82F6934F-56F9-4F40-A212-7A2C5BCECB81}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XOX.CRM.Lib</RootNamespace>
+    <AssemblyName>XOX.CRM.Lib</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Constants\XOXConstants.cs" />
+    <Compile Include="Common\Constants\XOXExceptions.cs" />
+    <Compile Include="Common\Enum\AccountEnum.cs" />
+    <Compile Include="Common\Enum\BatchWorkEnum.cs" />
+    <Compile Include="Common\Enum\CommonEnum.cs" />
+    <Compile Include="Common\Enum\EnumUtil.cs" />
+    <Compile Include="Common\Enum\OrderEnum.cs" />
+    <Compile Include="Common\Enum\ServiceRequestEnum.cs" />
+    <Compile Include="Common\Util\Helper.cs" />
+    <Compile Include="Common\Util\Security.cs" />
+    <Compile Include="Common\VO\Account\AccountActivityVO.cs" />
+    <Compile Include="Common\VO\Account\BillPaymentVO.cs" />
+    <Compile Include="Common\VO\Account\AccountVO.cs" />
+    <Compile Include="Common\VO\Account\RefundVO.cs" />
+    <Compile Include="Common\VO\Account\ContactVO.cs" />
+    <Compile Include="Common\VO\Account\AddressInfoVO.cs" />
+    <Compile Include="Common\VO\Account\BankingInfoVO.cs" />
+    <Compile Include="Common\VO\Account\FilesVO.cs" />
+    <Compile Include="Common\VO\Account\PaymentVO.cs" />
+    <Compile Include="Common\VO\Account\PersonalInfoVO.cs" />
+    <Compile Include="Common\VO\Asset\AssetVO.cs" />
+    <Compile Include="Common\VO\Audit\AuditTrailVO.cs" />
+    <Compile Include="Common\VO\EAI\Account.cs" />
+    <Compile Include="Common\VO\EAI\Common.cs" />
+    <Compile Include="Common\VO\EAI\Order.cs" />
+    <Compile Include="Common\VO\BatchWorkVO.cs" />
+    <Compile Include="Common\VO\PaymentCollectedVO.cs" />
+    <Compile Include="Common\VO\Order\PaymentRecordVO.cs" />
+    <Compile Include="Common\VO\Order\OrderActivityVO.cs" />
+    <Compile Include="Common\VO\Order\OrderDocumentVO.cs" />
+    <Compile Include="Common\VO\Order\OrderDetailVO.cs" />
+    <Compile Include="Common\VO\ServiceRequest\ServiceRequestVO.cs" />
+    <Compile Include="Common\VO\Product\ProductVO.cs" />
+    <Compile Include="Common\VO\Settings\LookupVO.cs" />
+    <Compile Include="Common\VO\MobileNumVO.cs" />
+    <Compile Include="Common\VO\Order\OrderItemVO.cs" />
+    <Compile Include="Common\VO\Order\OrderVO.cs" />
+    <Compile Include="Common\VO\UserVO.cs" />
+    <Compile Include="DAL\AccountDAL.cs" />
+    <Compile Include="DAL\AuditDAL.cs" />
+    <Compile Include="DAL\OrderDAL.cs" />
+    <Compile Include="DBContext\XOX_T_ACCNT_BANK.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ACCNT_PAYMENT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ACCNT_REFUND.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ACCNT_REV.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_BATCHWORK.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_BATCHWORK_EMAIL.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_BATCHWORK_LOG.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_BILL_PAYMENT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_IS_KEY.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ORDER_AUDIT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_PAYMENT_COLLECTED.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_REV_NUM.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IAccountAttachmentService.cs" />
+    <Compile Include="Interfaces\IAuditService.cs" />
+    <Compile Include="Interfaces\IBillPaymentService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interfaces\IRefundService.cs" />
+    <Compile Include="Interfaces\IContactService.cs" />
+    <Compile Include="Interfaces\IAddressService.cs" />
+    <Compile Include="Interfaces\ICommonService.cs" />
+    <Compile Include="Interfaces\IMobileNumService.cs" />
+    <Compile Include="Interfaces\IOrderService.cs" />
+    <Compile Include="Interfaces\IAssetService.cs" />
+    <Compile Include="Interfaces\IBatchWorkService.cs" />
+    <Compile Include="Interfaces\IServiceRequestService.cs" />
+    <Compile Include="Interfaces\IProductService.cs" />
+    <Compile Include="Interfaces\IUserService.cs" />
+    <Compile Include="Mapper\AccountMapper.cs" />
+    <Compile Include="Mapper\AuditMapper.cs" />
+    <Compile Include="Mapper\CommonMapper.cs" />
+    <Compile Include="Mapper\MobileNumMapper.cs" />
+    <Compile Include="Mapper\OrderMapper.cs" />
+    <Compile Include="Mapper\UserMapper.cs" />
+    <Compile Include="Services\Account\AccountAttachmentService.cs" />
+    <Compile Include="Services\Account\BillPaymentService.cs" />
+    <Compile Include="Services\RefundService.cs" />
+    <Compile Include="Services\Asset\AssetService.cs" />
+    <Compile Include="Services\BatchWorkService.cs" />
+    <Compile Include="Services\AuditService.cs" />
+    <Compile Include="Services\Account\ContactService.cs" />
+    <Compile Include="Services\Account\AddressService.cs" />
+    <Compile Include="Services\APIService.cs" />
+    <Compile Include="Services\CommonService.cs" />
+    <Compile Include="Services\PaymentCollectedService.cs" />
+    <Compile Include="Services\MobileNumService.cs" />
+    <Compile Include="Services\Order\OrderActivityService.cs" />
+    <Compile Include="Services\Order\OrderAttachmentService.cs" />
+    <Compile Include="Services\Order\OrderService.cs" />
+    <Compile Include="Services\Product\ProductService.cs" />
+    <Compile Include="Services\ServiceRequest\ServiceRequestService.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\Account\AccountService.cs" />
+    <Compile Include="DBContext\CRMDbContext.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CRMDbContext.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\CRMDbContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\CRMDbContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CRMDbContext.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IAccountService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DBContext\XOX_T_ACCNT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ACCNT_ACT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ACCNT_ATT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ACCNT_NOTE.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ADDR.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ASSET.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ASSET_CON.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ASSET_OM.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_AUDIT_LOG.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_AUDIT_TRAIL.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_CONTACT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_CON_ACCNT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_CON_ADDR.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_DEMAND_LST.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_GROUP.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_GROUP_ACCESS.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_LKP_GENERAL.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_MODULE.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ORDER.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ORDER_ACT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ORDER_ATT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ORDER_ITEM.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ORDER_ITEM_OM.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_ORDER_NOTE.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_PROD.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_PROD_ATTR.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_PROD_ISP.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_PROD_ITEM.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_PROD_OM.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_SRV_ACT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_SRV_ATT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_SRV_KEYVAL.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_SRV_NOTE.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_SRV_TIC.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_USER.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_USER_GROUP.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_USER_GROUP_DEPT.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_VAL_LST.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBContext\XOX_T_VAL_MST.cs">
+      <DependentUpon>CRMDbContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WebServices\EAIService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebServices\ExternalService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="DBContext\CRMDbContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CRMDbContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DBContext\CRMDbContext.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CRMDbContext.edmx</DependentUpon>
+      <LastGenOutput>CRMDbContext.Context.cs</LastGenOutput>
+    </None>
+    <None Include="DBContext\CRMDbContext.edmx.diagram">
+      <DependentUpon>CRMDbContext.edmx</DependentUpon>
+    </None>
+    <None Include="DBContext\CRMDbContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CRMDbContext.edmx</DependentUpon>
+      <LastGenOutput>CRMDbContext.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Access\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,54 @@
+﻿@model CRM.Models.MobileNumModel
+@{
+    ViewBag.Title = "Mobile Number Details Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+
+}
+
+<div id="main_content" class="clearfix form-horizontal">
+    @using (Html.BeginForm("Edit", "MobileNum", FormMethod.Post))
+    {
+        @Html.HiddenFor(model => model.MobileNumId)
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-user"></i> <label class="title">Personal Information</label></h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.MSISDN, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Price)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.BatchNum)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.BatchNum, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-footer">
+            <div>
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</div>

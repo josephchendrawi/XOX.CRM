@@ -1,0 +1,5 @@
+alter table [XOX_T_ACCNT_PAYMENT]
+add FLAG_RESPONSE bit
+
+update [XOX_T_ACCNT_PAYMENT]
+set FLAG_RESPONSE = 1

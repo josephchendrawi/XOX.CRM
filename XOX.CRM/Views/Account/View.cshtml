@@ -1,0 +1,964 @@
+﻿@model CRM.Models.AccountModel
+@{
+    ViewBag.Title = "Account Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+@Styles.Render("~/Content/fancybox")
+@Scripts.Render("~/bundles/fancybox")
+<!-- datatable -->
+<script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+<script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+<link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(function () {
+        $("#tabs-min").tabs();
+        $("#tabs-min").on("click", function () { $("#tabs-min").ScrollTo(); });
+    });
+    $('.fancybox').fancybox({
+        afterShow: function () {
+            var iviewer = $('.fancybox-inner').iviewer(
+            {
+                src: $.fancybox.current.href,
+            });
+            $('img.fancybox-image').attr('src', '');
+        }
+    });
+</script> 
+}
+
+<div id="main_content" class="clearfix form-horizontal view-content">
+    @if (Model.AccountType == (int)AccountType.PrincipalLine || Model.AccountType == (int)AccountType.SupplementaryLine)
+    {
+    <div style="padding-bottom: 5px;">
+        <a href="@Url.Action("Edit","Account")?ID=@Model.AccountId&ReturnURL=@Url.Action("View", "Account")?ID=@Model.AccountId" class="btn btn-primary" role="button">Edit</a>
+        <a href="@Url.Action("Add","ServiceRequest")?AccountId=@Model.AccountId" class="btn btn-success" role="button"><i class="fa fa-plus-circle"></i>Add Request</a>
+        <a href="@Url.Action("ChangePlan","Order")?AccountId=@Model.AccountId" class="btn btn-success" role="button"><i class="fa fa-exchange"></i> Change Plan</a>
+    
+        @*@using (Html.BeginForm("UpdateStatus", "Account", FormMethod.Post, new { enctype = "multipart/form-data", @class="inline" }))
+        {
+            <input type="hidden" value="@Model.AccountId" name="AccountId" />
+            <a href="#">
+                @if (Model.PersonalInfo.CustomerStatus == AccountStatus.Prospect.ToString())
+                {
+                    <button class="btn btn-default" disabled>@Model.PersonalInfo.CustomerStatus</button>
+                }
+                else if (Model.PersonalInfo.CustomerStatus == AccountStatus.Active.ToString())
+                {
+                    <button class="btn btn-success" disabled>@Model.PersonalInfo.CustomerStatus</button>
+                }
+                else if (Model.PersonalInfo.CustomerStatus == AccountStatus.Barred.ToString())
+                {
+                    <button class="btn btn-primary" disabled>@Model.PersonalInfo.CustomerStatus</button>
+                }
+                else if (Model.PersonalInfo.CustomerStatus == AccountStatus.Blocked.ToString())
+                {
+                    <button class="btn btn-danger" disabled>@Model.PersonalInfo.CustomerStatus</button>
+                }
+                @if (Model.PersonalInfo.CustomerStatus == AccountStatus.Terminated.ToString())
+                {
+                    <button class="btn btn-warning" disabled>@Model.PersonalInfo.CustomerStatus</button>
+                }
+                else
+                {
+                    <button class="btn btn-warning">Terminate</button>
+                }
+            </a>
+        }*@
+    </div>
+    }
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-user"></i> <label class="title">Personal Information</label></h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.CustomerStatus)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.PersonalInfo.CustomerStatus
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Salutation)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((Salutation)Model.PersonalInfo.Salutation)
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.FullName)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.PersonalInfo.FullName
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.BirthDate)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.PersonalInfo.BirthDate.ToString("dd MMM yyyy")
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Gender)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((Gender)Model.PersonalInfo.Gender)
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.IdentityType)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((IdentityType)Model.PersonalInfo.IdentityType)
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.IdentityNo)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.PersonalInfo.IdentityNo
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.MotherMaidenName)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.PersonalInfo.MotherMaidenName
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Email)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.PersonalInfo.Email
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.ContactNumber)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.PersonalInfo.ContactNumber
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Nationality)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetLookupNameByVal(Model.PersonalInfo.Nationality, "Nationality")
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.Race)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetLookupNameByVal(Model.PersonalInfo.Race, "Race")
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.PreferredLanguage)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((Language)Model.PersonalInfo.PreferredLanguage)
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountType)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((AccountType)Model.AccountType)
+                            @if ((AccountType)Model.AccountType == AccountType.SupplementaryLine)
+                            {
+                                <a href="@Url.Action("View", "Account", new { ID = Model.ParentAccountId })">(View Principal)</a>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Grade)</label>
+                        <div class="col-md-8 text-offset">
+                            @(((AccountGrade)Model.Grade).ToString())
+                            <span id="GradeIndicator" style="color:@(((AccountGrade)Model.Grade).ToString())">
+                                <i class="fa fa-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div @*id="show-more" style="display: none;"*@>
+                <div class="line"></div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.RegistrationDate)</label>
+                            <div class="col-md-8 text-offset">
+                                @if (Model.RegistrationDate != null)
+                                {
+                                    @Model.RegistrationDate.Value.ToString("dd MMM yyyy")
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.TerminationDate)</label>
+                            <div class="col-md-8 text-offset">
+                                @if (Model.TerminationDate != null)
+                                {
+                                    @Model.TerminationDate.Value.ToString("dd MMM yyyy")
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.effectiveBillingDate)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.AccountUsage.effectiveBillingDate
+                            </div>
+                        </div>
+                        @*<div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.SponsorPersonnel)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.PersonalInfo.SponsorPersonnel
+                            </div>
+                        </div>*@
+                    </div>
+                    <div class="col-md-6">
+                        @*<div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.CustomerAccountNumber)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.PersonalInfo.CustomerAccountNumber
+                            </div>
+                        </div>*@
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.MSISDNNumber)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.PersonalInfo.MSISDNNumber
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SIMSerialNumber)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.SIMSerialNumber
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Plan)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.Plan
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.PersonalInfo.CreditLimit)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.PersonalInfo.CreditLimit
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.previousBalance)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.previousBalance
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.UnbilledAmount)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.UnbilledAmount
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.AmountDue)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.AmountDue
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.MonthlyPayments)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.MonthlyPayments
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.RemainingDeposit)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.RemainingDeposit
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.DataExpiration)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.DataExpiration
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.ContractPeriod)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.ContractPeriod
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.DataAddOn)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.DataAddOn
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.DataSMS)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.DataSMS
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.Deposit)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.Deposit
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.SignUpChannel)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.SignUpChannel
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.OriginalBillingDate)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.OriginalBillingDate
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AccountUsage.NextCycleBillingDate)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AccountUsage.NextCycleBillingDate
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*<button class="btn-show-more btn btn-default btn-sm" onclick="showmore('show-more');">
+                &nbsp; <i class="fa fa-circle"></i> <i class="fa fa-circle"></i> <i class="fa fa-circle"></i>
+            </button>*@
+        </div>
+    </div>
+
+    <div id="tabs-min">
+        <ul>
+            <li><a href="#tabs-banking"><i class="fa fa-credit-card"></i><span>Banking Info</span></a></li>                
+            <li><a href="#tabs-address"><i class="fa fa-road"></i><span>Address</span></a></li>
+            @if (Model.AccountType == (int)AccountType.PrincipalLine)
+            {
+                <li><a href="#tabs-files"><i class="fa fa-files-o"></i><span>Files</span></a></li>
+                <li><a href="#tabs-activity"><i class="fa fa-list"></i><span>Activity</span></a></li>
+                <li><a href="#tabs-service-requests"><i class="ion ion-android-note"></i><span>Service Requests</span></a></li>
+            }
+                <li><a href="#tabs-payment"><i class="fa fa-money"></i><span>Payment History</span></a></li>
+            @if (Model.AccountType == (int)AccountType.PrincipalLine)
+            {
+                <li><a href="#tabs-supplementary"><i class="fa fa-comment"></i><span>Supplementary Line</span></a></li>
+
+                if (XOX.CRM.Lib.UserService.IsAuthorized("CUG", "VIEW") == true) {
+                    <li><a href="#tabs-cug"><i class="fa fa-group"></i><span>Closed User Group (CUG)</span></a></li>
+                }
+            }
+            <li><a href="#tabs-orders"><i class="fa fa-bars"></i><span>Orders</span></a></li>
+            @*<li><a href="#tabs-package"><i class="fa fa-road"></i><span>Package Subscription</span></a></li>*@
+            @*<li><a href="#tabs-activity"><i class="fa fa-road"></i><span>Subscription Activity</span></a></li>*@
+            @*<li><a href="#tabs-barsubscriber"><i class="fa fa-road"></i><span>Bar and Unbar Subscriber</span></a></li>*@
+            @*<li><a href="#tabs-acctclosure"><i class="fa fa-road"></i><span>Account Closure</span></a></li>*@
+        </ul>
+
+        <div id="tabs-banking">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.BankName)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BankingInfo.BankName
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.BankAccountNumber)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BankingInfo.BankAccountNumber
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.BankAccountName)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BankingInfo.BankAccountName
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CardIssuerBank)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BankingInfo.CardIssuerBank
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.ThirdPartyFlag)</label>
+                        <div class="col-md-8 text-offset">
+                            @if (Model.BankingInfo.ThirdPartyFlag == 1)
+                            { <text>Yes</text> }
+                            else
+                            { <text>No</text> }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CardType)</label>
+                        <div class="col-md-8 text-offset">
+                            @Helper.GetDescription((CardType)Model.BankingInfo.CardType)
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CreditCardNo)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BankingInfo.CreditCardNo
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CardHolderName)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BankingInfo.CardHolderName
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BankingInfo.CardExpiryMonth)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BankingInfo.CardExpiryYear/@Model.BankingInfo.CardExpiryMonth.ToString("D2")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div id="tabs-address">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box-header with-border margin">
+                        <h3 class="box-title"><i class="fa fa-home"></i> @Html.LabelFor(model => model.AddressInfo)</h3>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.AddressLine1)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AddressInfo.AddressLine1
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.AddressLine2)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AddressInfo.AddressLine2
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.City)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AddressInfo.City
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.State)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AddressInfo.State
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.Postcode)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AddressInfo.Postcode
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.AddressInfo.Country)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.AddressInfo.Country
+                        </div>
+                    </div>
+                </div>
+                @if (Model.BillingAddressInfo.AddressId != 0) { 
+                <div class="col-md-6">
+                    <div class="box-header with-border margin">
+                        <h3 class="box-title"><i class="fa fa-money"></i> @Html.LabelFor(model => model.BillingAddressInfo)</h3>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.AddressLine1)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BillingAddressInfo.AddressLine1
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.AddressLine2)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BillingAddressInfo.AddressLine2
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.City)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BillingAddressInfo.City
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.State)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BillingAddressInfo.State
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.Postcode)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BillingAddressInfo.Postcode
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.BillingAddressInfo.Country)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.BillingAddressInfo.Country
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+        @if (Model.AccountType == (int)AccountType.PrincipalLine)
+        { 
+            <div id="tabs-files">
+                <div class="row">
+                    @foreach (var v in Model.Files)
+                    {
+                        <div class="img-wrapper" id="img-@v.FileId">
+                            <a href="~/Account/GetFile?filepath=@v.Path" class="fancybox" title="@v.Path">
+                                <div class="img-box-round">
+                                    @if (v.Type == "IMAGE")
+                                    {
+                                        <img src="~/Account/GetFile?filepath=@v.Path" class="img-responsive-flex img-center" />
+                                    }
+                                    else
+                                    {
+                                        <div class="img-center fa fa-file-text"></div>
+                                    }
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div id="tabs-activity">
+                <table class="table table-striped" id="tbl-list-activity">
+                    <thead>
+                        <tr>
+                            <th class=""><label>Description</label></th>
+                            <th class=""><label>Reason</label></th>
+                            <th class=""><label>Assignee</label></th>
+                            <th class=""><label>Created At</label></th>
+                        </tr>
+                    </thead>
+
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="tabs-service-requests">
+                <a href="@Url.Action("Add","ServiceRequest")?AccountId=@Model.AccountId">
+                    <button class="btn btn-success pull-right" style="margin-right:7px">
+                        <i class="fa fa-plus-circle"></i>Add Request
+                    </button>
+                </a>
+
+                <table class="table table-striped" id="tbl-list-service-requests">
+                    <thead>
+                        <tr>
+                            <th class="w50"></th>
+                            <th class="">Category</th>
+                            <th class="">CreatedDate</th>
+                            <th class="">Status</th>
+                            <th class="">Priority</th>
+                            <th class="">Assignee</th>
+                            <th class=""></th>
+                        </tr>
+                    </thead>
+
+                    <tbody></tbody>
+                </table>
+            </div>
+        }
+        <div id="tabs-payment">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="@Url.Action("CreatePayment","Account")?AccountId=@Model.AccountId">
+                        <span class="btn btn-success">
+                            <i class="fa fa-usd"></i>Make Payment
+                        </span>
+                    </a>
+                    <span class="btn btn-default pull-right" id="btn-refresh-list-payment">
+                        <i class="fa fa-refresh"></i>Refresh Table
+                    </span>
+                    <table class="table table-striped" id="tbl-list-payment">
+                        <thead>
+                            <tr>
+                                <th class="">Amount</th>
+                                <th class="">Buyer ID</th>
+                                <th class="">Description</th>
+                                <th class="">Operation ID</th>
+                                <th class="">Payment Date</th>
+                                <th class="">Payment ID</th>
+                                <th class="">Payment Instrument ID</th>
+                                <th class="">Payment Method</th>
+                                <th class="">Pay Type</th>
+                                <th class="">Status</th>
+                                <th class="">Vendor ID</th>
+                            </tr>
+                        </thead>
+
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        @if (Model.AccountType == (int)AccountType.PrincipalLine)
+        {
+            if (XOX.CRM.Lib.UserService.IsAuthorized("CUG", "VIEW") == true) {
+            <div id="tabs-cug">
+                <div class="row">
+                    <div class="col-md-1">
+                        <button class="btn btn-success" style="margin-right:7px" onclick="$('#add-form').show();">
+                            <i class="fa fa-plus-circle"></i>Add
+                        </button>
+                    </div>
+                    <div class="col-md-11">
+                        <div class="row" id="add-form" style="display: none;">
+                            @using (Html.BeginForm("AddCUG", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <input type="text" name="NewCUGNumber" value="" class="form-control col-md-10" />
+                                <input type="hidden" name="AccountId" value="@Model.AccountId" />
+                                <span>&nbsp;</span>
+                                <input type="submit" value="Add" class="btn btn-primary" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="line-light"></div>
+                <div class="row">                
+                    <div class="col-md-2"></div>
+                    <div class="col-md-7">
+                        <table class="table table-striped" id="tbl-list-cug">
+                            <thead>
+                                <tr>
+                                    <th class="w50"></th>
+                                    <th class="">CUG Number</th>
+                                    <th class="w50"></th>
+                                </tr>
+                            </thead>
+
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+            </div>
+            }
+            <div id="tabs-supplementary">
+                <div class="row">
+                    <div class="col-md-8">
+                        <table class="table table-striped" id="tbl-list-supplementary">
+                            <thead>
+                                <tr>
+                                    <th class=""></th>
+                                    <th class="">Salutation</th>
+                                    <th class="">FullName</th>
+                                    <th class="">MSISDN</th>
+                                    <th class="w50"></th>
+                                </tr>
+                            </thead>
+
+                            <tbody></tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        }
+        <div id="tabs-orders">
+            <div class="row">
+                <div class="col-md-8">
+                    <table class="table table-striped" id="tbl-list-orders">
+                        <thead>
+                            <tr>
+                                <th class=""></th>
+                                <th class="">Order Number</th>
+                                <th class=""></th>
+                                <th class=""></th>
+                                <th class="">Registration Date</th>
+                                <th class="">Category</th>
+                                <th class="">Status</th>
+                                <th class="w50"></th>
+                            </tr>
+                        </thead>
+
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        loadListTable();
+
+        $("#tbl-list-cug").on("click", "[name='deleteBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='Id[]']").val();
+
+            window.location.href = "@Url.Action("DeleteCUG", "Account")?CUGNo=" + Id + "&AccountId=@Model.AccountId";
+        })
+
+        
+        $("#tbl-list-supplementary").on("click", "[name='viewBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='AccountId[]']").val();
+
+            window.location.href = "@Url.Action("View", "Account", new { Id = "" })/" + Id;
+        })
+        
+        $("#tbl-list-orders").on("click", "[name='viewBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='OrderId[]']").val();
+
+            window.location.href = "@Url.Action("View", "Order")/" + Id;
+        })
+        
+        $("#tbl-list-service-requests").on("click", "[name='viewBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='Id[]']").val();
+
+            window.location.href = "@Url.Action("View", "ServiceRequest")/" + Id;
+        })
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list-activity").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListAccountActivity", "Account")?AccountId=@Model.AccountId",
+            "bProcessing": true,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "aoColumns": [
+                    {
+                        "mData": "Description",
+                        "bSortable": false,
+                        "sWidth": "35%"
+                    },
+                    {
+                        "mData": "Reason",
+                        "bSortable": false,
+                        "sWidth": "30%"
+                    },
+                    {
+                        "mData": "Assignee",
+                        "sWidth": "20%"
+                    },
+                    {
+                        "mData": "CreatedDateTimeText",
+                        "sWidth": "15%"
+                    }
+            ]
+        });
+
+        var oTable3 = $("#tbl-list-cug").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListCUG", "Account")?AccountId=@Model.AccountId",
+            "bProcessing": true,
+            "bLengthChange": false,
+            "iDisplayLength": 50,
+            "aoColumns": [
+                    {
+                        "mData": null,
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='hidden' value='" + Obj.aData['CUGNumber'] + "' name='Id[]' />";
+                        }
+                    },
+                    { "mData": "CUGNumber" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="deleteBtn[]">' +
+                                '<i class="fa fa-minus-circle"></i> Remove</a>';
+                        }
+                    }
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            }
+        });
+
+        var oTable2 = $("#tbl-list-supplementary").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListSupplementaryLine", "Account")?ID=@Model.AccountId",
+            "bProcessing": true,
+            "aoColumns": [
+                    {
+                        "mData": "AccountId",
+                        "sName": "AccountId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='hidden' value='" + Obj.aData['AccountId'] + "' name='AccountId[]' />";
+                        }
+                    },
+                    { "mData": "Salutation" },
+                    { "mData": "FullName" },
+                    { "mData": "MSISDN" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="viewBtn[]">' +
+                                '<i class="fa fa-eye"></i> View</a>';
+                        }
+                    }
+            ]
+        });
+
+        var oTable4 = $("#tbl-list-payment").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListAccountPayment", "Account")?AccountId=@Model.AccountId",
+            "bProcessing": true,
+            "aoColumns": [
+                    { "mData": "amount" },
+                    { "mData": "buyerID" },
+                    { "mData": "description" },
+                    { "mData": "operationID" },
+                    { "mData": "paymentDate" },
+                    { "mData": "paymentID" },
+                    { "mData": "paymentInstrumentID" },
+                    { "mData": "paymentMethod" },
+                    { "mData": "payType" },
+                    { "mData": "status" },
+                    { "mData": "vendorID" }
+                        ]
+        });        
+
+        $("#btn-refresh-list-payment").click(function () {
+            oTable4.fnDraw();
+        });
+
+        var oTable5 = $("#tbl-list-orders").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListSearchOrder", "Order")?AccountId=@Model.AccountId&OrderType=",
+            "bProcessing": true,
+            "bLengthChange": false,
+            "aoColumns": [
+                    {
+                        "mData": "OrderId",
+                        "sName": "OrderId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return Obj.aData['Idx'] + "<input type='hidden' value='" + Obj.aData['OrderId'] + "' name='chk_OrderId[]' />" +
+                                "<input type='hidden' value='" + Obj.aData['OrderId'] + "' name='OrderId[]' />";
+                        }
+                    },
+                    { "mData": "OrderNum" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                    },
+                    { "mData": "RegistrationDate" },
+                    { "mData": "Category" },
+                    { "mData": "Status" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="viewBtn[]">' +
+                                '<i class="fa fa-eye"></i> View</a>';
+                        }
+                    }
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            }
+        });
+
+        var oTable6 = $("#tbl-list-service-requests").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListRequest", "ServiceRequest")?AccountId=@Model.AccountId",
+            "bProcessing": true,
+            "bFilter": false,
+            "aaSorting": [[2, 'desc']],
+            "aoColumns": [
+                    {
+                        "mData": "ServiceRequestId",
+                        "sName": "ServiceRequestId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='hidden' value='" + Obj.aData['ServiceRequestId'] + "' name='Id[]' />";
+                        }
+                    },
+                    {
+                        "mData": "Category",
+                        "iDataSort": 3,
+                    },
+                    {
+                        "mData": "CreatedDate",
+                        "iDataSort": 4,
+                    },
+                    {
+                        "mData": "Status",
+                        "iDataSort": 5,
+                    },
+                    {
+                        "mData": "Priority",
+                        "iDataSort": 6,
+                    },
+                    {
+                        "mData": "Assignee",
+                        "iDataSort": 7,
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="viewBtn[]">' +
+                                '<i class="fa fa-eye"></i> View</a>';
+                        }
+                    }
+            ]
+        });
+
+        //add class to jquery.datatables filter
+        $('.dataTables_length select').addClass("btn btn-primary");
+        $('.dataTables_filter input').addClass("form-control");
+
+
+        //hide filter box
+        $('#tbl-list-supplementary_filter').hide();
+        $('#tbl-list-supplementary_length').hide();
+        $('#tbl-list-payment_filter').hide();
+        $('#tbl-list-payment_length').hide();
+        $('#tbl-list-orders_filter').hide();
+        $('#tbl-list-orders_length').hide();
+    }
+</script>

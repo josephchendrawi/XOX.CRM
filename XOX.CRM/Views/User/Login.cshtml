@@ -1,0 +1,42 @@
+﻿@model CRM.Models.LoginModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout_Empty.cshtml";
+}
+
+<div class="login-box">
+
+    <div class="login-logo">
+        &nbsp;
+    </div>
+    <div class="login-box-body">
+        @using (Html.BeginForm("Login", "User", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
+        {
+            <div class="login-box-header">Sign In</div>
+
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class="form-group has-feedback">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", style = "width:310px", placeholder = "Email" })
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                @{ Html.ValidateFor(m => m.Email); }
+            </div>
+            <div class="form-group has-feedback">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", style = "width:310px", placeholder = "Password" })
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                @{ Html.ValidateFor(m => m.Password); }
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                    Remember me ?
+                </div><!-- /.col -->
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                </div><!-- /.col -->
+            </div>
+        }
+    </div>
+</div>
+

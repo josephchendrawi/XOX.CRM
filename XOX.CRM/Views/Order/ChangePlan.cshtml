@@ -1,0 +1,45 @@
+﻿@model CRM.Models.ChangePlanVM
+@{
+    ViewBag.Title = "Change Plan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+}
+
+<div id="main_content" class="clearfix form-horizontal view-content">
+@using (Html.BeginForm("ChangePlan", "Order", FormMethod.Post, new { enctype = "multipart/form-data", id = "form-update" }))
+{
+    @Html.HiddenFor(m => m.AccountId)
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.CurrentPlan)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.CurrentPlan
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.NextCycleBillingDate)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.NextCycleBillingDate
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.NewPlan)</label>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.NewPlan, (IEnumerable<SelectListItem>)ViewBag.Plans, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-footer">
+        <div>
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </div>
+    </div>
+}

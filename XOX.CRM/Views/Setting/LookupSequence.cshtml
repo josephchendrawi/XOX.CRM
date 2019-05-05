@@ -1,0 +1,84 @@
+﻿@model CRM.Models.LookupSequenceVM
+@{
+    ViewBag.Title = "Lookup Sequence";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+
+<div id="main_content" class="clearfix form-horizontal view-content">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-file-text"></i> <label class="title">Lookup Sequence</label></h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group clearfix">
+                        <label class="col-xs-4 control-label">@Html.LabelFor(model => model.Type)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.Type
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group clearfix">
+                        <ul id="sortable">
+                            @foreach (var v in Model.List)
+                            {
+                                <li class="btn btn-flat btn-default btn-block" id="@v.Value">@v.Name <span class="fa fa-bars pull-right" style="color: #cccccc;"></span></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group clearfix">
+                        <button class="btn btn-primary" onclick="onSubmit();">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm("UpdateSequence", "Setting", FormMethod.Post, new { enctype = "multipart/form-data", id = "form-sequence" }))
+        {
+            @Html.Hidden("NewOrder", "")
+            @Html.Hidden("Type", Model.Type)
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+    });
+
+    function onSubmit() {
+        var newOrder = $("#sortable").sortable('toArray');
+        $.each(newOrder, function (index, value) {
+            if ($('#NewOrder').val() == "") {
+                $('#NewOrder').val(index + "$#*$" + value);
+            }
+            else {
+                $('#NewOrder').val($('#NewOrder').val() + "|#*|" + index + "$#*$" + value)
+            }
+            //console.log(index + "$#*$" + value);
+        });
+        $('form#form-sequence').submit();
+        //console.log($('#NewOrder').val());
+    }
+</script>
+
+<style>
+    #sortable .btn {
+        text-align: left !important;
+    }
+    #sortable{
+        padding-left: 0px !important;
+    }
+    .box, .col-md-4 {
+        position: inherit !important;
+    }
+</style>

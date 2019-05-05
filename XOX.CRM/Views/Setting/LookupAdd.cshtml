@@ -1,0 +1,57 @@
+﻿@model CRM.Models.LookupModel
+@{
+    ViewBag.Title = "Lookup Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+
+}
+
+<div id="main_content" class="clearfix form-horizontal">
+    @using (Html.BeginForm("LookupAdd", "Setting", FormMethod.Post))
+    {
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-file-text"></i> <label class="title">Lookup Information</label></h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group clearfix">
+                            <label class="col-xs-4 control-label">@Html.LabelFor(model => model.Type)</label>
+                            <div class="col-md-8">
+                                @if (Model.Type == null || Model.Type == "") { 
+                                    @Html.TextBoxFor(m => m.Type, new { @class = "form-control" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.Type, new { @class = "form-control", @disabled = "disabled" })
+                                    @Html.HiddenFor(m => m.Type)
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Name)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-xs-4 control-label">@Html.LabelFor(model => model.Value)</label>
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(m => m.Value, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+          
+        <div class="content-footer">      
+            <div>
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</div>

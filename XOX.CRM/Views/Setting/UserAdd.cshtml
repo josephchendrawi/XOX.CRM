@@ -1,0 +1,56 @@
+﻿@model CRM.Models.UserModel
+@{
+    ViewBag.Title = "User Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+
+}
+
+<div id="main_content" class="clearfix form-horizontal">
+    @using (Html.BeginForm("UserAdd", "Setting", FormMethod.Post))
+    {
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-user"></i> <label class="title">User Information</label></h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Username)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Password)</label>
+                            <div class="col-md-8">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.StaffName)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.StaffName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.UserGroupId)</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.UserGroupId, new SelectList(ViewBag.UserGroups, "Id", "GroupCode"), new { @class="btn btn-primary" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+          
+        <div class="content-footer">      
+            <div>
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</div>

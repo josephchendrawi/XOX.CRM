@@ -1,0 +1,156 @@
+﻿@model CRM.Models.UserModel
+@{
+    ViewBag.Title = "User Master";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+}
+
+@section Title { @ViewBag.List }
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                <a href="@Url.Action("UserAdd","Setting")">
+                    <button class="btn btn-success pull-right" style="margin-right:7px">
+                        <i class="fa fa-plus-circle"></i>Create User
+                    </button>
+                </a>
+            </div>
+
+            <div class="line-light"></div>
+
+            <table class="table table-striped" id="tbl-list">
+                <thead>
+                    <tr>
+                        <th class="w50"></th>
+                        <th class="">@Html.LabelFor(model => model.Username)</th>
+                        <th class="">@Html.LabelFor(model => model.StaffName)</th>
+                        <th class="">@Html.LabelFor(model => model.UserGroupId)</th>
+                        <th class=""></th>
+                        <th class=""></th>
+                        <th class=""></th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        loadListTable();
+
+        $("#tbl-list").on("click", "[name='editBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='Id[]']").val();
+
+            window.location.href = "@Url.Action("UserEdit", "Setting")/" + Id;
+        });
+
+        $("#tbl-list").on("click", "[name='viewBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='Id[]']").val();
+
+            window.location.href = "@Url.Action("UserView", "Setting")/" + Id;
+        });
+
+        $("#tbl-list").on("click", "[name='lockBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='Id[]']").val();
+
+            window.location.href = "@Url.Action("Lock", "User")/" + Id;
+        });
+
+        $("#tbl-list").on("click", "[name='unlockBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='Id[]']").val();
+
+            window.location.href = "@Url.Action("Unlock", "User")/" + Id;
+        });
+
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListUser", "Setting")",
+            "bProcessing": true,
+            "aoColumns": [
+                    {
+                        "mData": "Id",
+                        "sName": "Id",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='checkbox' value='" + Obj.aData['Id'] + "' name='chk_Id[]' />" +
+                                "<input type='hidden' value='" + Obj.aData['Id'] + "' name='Id[]' />";
+                        }
+                    },
+                    { "mData": "Username" },
+                    {
+                        "mData": "StaffName",
+                        "fnRender": function (Obj) {
+                            if (Obj.aData['StaffName'] == null || Obj.aData['StaffName'] == "") {
+                                return "-";
+                            }
+                            else {
+                                return Obj.aData['StaffName'];
+                            }
+                        }
+                    },
+                    { "mData": "UserGroupCode" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="viewBtn[]">' +
+                                '<i class="fa fa-eye"></i> View</a>';
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="editBtn[]">' +
+                                '<i class="fa fa-edit"></i> Edit</a>';
+                        }
+                    },
+                    {
+                        "mData": "ActiveFlag",
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            if (Obj.aData["ActiveFlag"] == "1") {
+                                return '<a class="btn btn-md" name="lockBtn[]">' +
+                                    '<i class="fa fa-lock"></i> Lock</a>';
+                            }
+                            else if (Obj.aData["ActiveFlag"] == "2") {
+                                return '<a class="btn btn-md btn-success" name="unlockBtn[]">' +
+                                    '<i class="fa fa-unlock"></i> Unlock</a>';
+                            }
+                        }
+                    },
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            }
+        });
+
+        $('.dataTables_length select').addClass("btn btn-primary");
+        $('.dataTables_filter input').addClass("form-control");
+    }
+</script>
+

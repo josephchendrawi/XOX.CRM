@@ -1,0 +1,220 @@
+﻿/*text offset*/
+.view-content .form-group .text-offset{
+    margin-top: -1px;
+}
+.view-content .control-label{
+    padding-top: 0 !important;
+}
+
+/*change label text align*/
+label.control-label{
+    text-align: left !important;
+}
+
+/*datepicker jquery-ui modification*/
+#ui-datepicker-div, #ui-datepicker-div select{
+    font-family: roboto , "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    color: #555;
+}
+
+.ui-datepicker-header{
+    background: none !important;
+    border: none !important;
+}
+
+.ui-state-default{
+    border: none !important;
+    width: 30px;
+}
+
+.ui-state-default.ui-state-hover{
+    background: #367FA9 !important;
+}
+
+.ui-state-active{
+    background: #367FA9 !important;
+    color: white !important;
+}
+
+/*footer*/
+#main-footer{
+    font-family: roboto , "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+}
+
+/*dropdown*/
+select.btn-primary{
+    background: url(css/images/arrow-down.png) no-repeat 90% #3C8DBC;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    padding-right: 28px;
+    height: 34px;
+}
+select.btn-primary:hover{
+    background: url(css/images/arrow-down.png) no-repeat 90% #367FA9;
+}
+option { 
+    background-color: white;
+    color: #555;
+}
+
+/*tabs*/
+#tabs-min { 
+    background: transparent !important; 
+    border: none !important; 
+} 
+#tabs-min .ui-widget-header { 
+    background: transparent !important; 
+    border: none !important; 
+    border-bottom: 1px solid #c0c0c0 !important; 
+    -moz-border-radius: 0px !important; 
+    -webkit-border-radius: 0px !important; 
+    border-radius: 0px !important; 
+} 
+#tabs-min .ui-tabs-nav .ui-state-default { 
+    background: transparent !important; 
+    border: none !important; 
+} 
+#tabs-min .ui-tabs-nav .ui-state-active { 
+    background: transparent url(css/images/uiTabsArrow.png) no-repeat bottom center !important; 
+    border: none !important; 
+} 
+#tabs-min .ui-tabs-nav .ui-state-default a { 
+    color: #cbcbcb; 
+    font-weight: 400;
+} 
+#tabs-min .ui-tabs-nav .ui-state-active a { 
+    color: #444; 
+    font-weight: 600;
+}
+#tabs-min ul li {
+    width: auto !important;
+}
+#tabs-min ul li a{    
+    text-align: center;
+    font-family: roboto , "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+#tabs-min > div{
+    background: white !important;
+}
+@media only screen and (max-width : 768px) {
+#tabs-min ul li a span{
+    display: none;
+}
+#tabs-min ul li {
+    width: auto;
+}
+}
+
+/*show more*/
+.btn-show-more{
+    display: block !important;
+    text-align: center !important;
+    margin:0 auto -20px auto !important;
+    color: #9a9a9a !important;
+    font-size: 8px !important;
+}
+
+/*box footer*/
+.content-footer{
+    padding: 0 0 20px 0;   
+}
+
+/*a disable*/
+a.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+
+/*text bold*/
+.text-bold-500{
+    font-weight: 600;
+}
+
+/*font style*/
+.tabs-infobox{
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+/*padding*/
+.padding-top-bottom-12
+{
+    padding: 12px 0 12px 0;
+}
+
+/*#*#*/
+/*image wrapper*/
+.img-wrapper{
+    display: inline-block;
+}
+.img-box-round{
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    margin: 10px;
+    position: relative;
+    border-radius: 50%;
+    background-color: #e8e8e8;
+}
+.img-box-square{
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    margin: 10px;
+    position: relative;
+    border-radius: 50%;
+    background-color: #e8e8e8;
+}
+/*image centering*/
+.img-center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 40px;
+    color: #787878;
+}
+.img-responsive-flex-portrait {
+    max-width: 100%;
+    height: auto;
+}
+.img-responsive-flex-landscape {
+    max-height: 100%;
+    width: auto;
+}
+/*image close button*/
+.img-wrapper .close {
+    cursor: pointer;
+    position: relative;
+    top: 25px;
+    right: 5px;
+    z-index: 3;
+    opacity: .7 !important;
+    color: red;
+}
+
+/*datatable column filter*/
+.datatable-column-filter{
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-bottom: 10px;
+    text-align: right;
+}
+
+/*table*/
+.table-compact tbody td{
+    font-size: 14px;
+    padding-top: 0px !important;
+    padding-bottom: 0 !important;
+}
+
+/*select force left-aligned*/
+select.btn{
+    text-align: left !important;
+}
+
+/**/
+.text-big{
+    font-size: large !important;
+}

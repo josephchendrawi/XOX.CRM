@@ -1,0 +1,44 @@
+﻿@model CRM.Models.UserGroupModel
+@{
+    ViewBag.Title = "User Group Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+
+}
+
+<div id="main_content" class="clearfix form-horizontal">
+    @using (Html.BeginForm("UserGroupAdd", "Setting", FormMethod.Post))
+    {
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-group"></i> <label class="title">User Group Information</label></h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.GroupCode)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.GroupCode, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Description)</label>
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+          
+        <div class="content-footer">      
+            <div>
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</div>

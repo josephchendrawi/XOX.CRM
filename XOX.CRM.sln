@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XOX.CRM.Lib", "XOX.CRM.Lib\XOX.CRM.Lib.csproj", "{82F6934F-56F9-4F40-A212-7A2C5BCECB81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XOX.CRM", "XOX.CRM\XOX.CRM.csproj", "{FB1A57D3-7FA7-4A73-BFA1-1D9F1E95A730}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XOX.CRM.API", "XOX.CRM.API\XOX.CRM.API\XOX.CRM.API.csproj", "{4389B305-B381-4B50-B1A8-BBB5259A0524}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XOX.CRM.API.ServiceModel", "XOX.CRM.API\XOX.CRM.API.ServiceModel\XOX.CRM.API.ServiceModel.csproj", "{53E82AC1-DD1D-4C66-B55F-F9F4ACFB2F40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XOX.CRM.API.ServiceInterface", "XOX.CRM.API\XOX.CRM.API.ServiceInterface\XOX.CRM.API.ServiceInterface.csproj", "{801A0F89-D5F6-49A6-BCEA-6624388C98A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XOX.CRM.API.Tests", "XOX.CRM.API\XOX.CRM.API.Tests\XOX.CRM.API.Tests.csproj", "{D22B5797-9F2A-4BA7-9636-6EFCE62EBE00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XOX.CRM.Scheduler", "XOX.CRM.Scheduler\XOX.CRM.Scheduler.csproj", "{CF723EB5-2500-4717-A828-0DE599C26A70}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82F6934F-56F9-4F40-A212-7A2C5BCECB81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82F6934F-56F9-4F40-A212-7A2C5BCECB81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82F6934F-56F9-4F40-A212-7A2C5BCECB81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82F6934F-56F9-4F40-A212-7A2C5BCECB81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB1A57D3-7FA7-4A73-BFA1-1D9F1E95A730}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB1A57D3-7FA7-4A73-BFA1-1D9F1E95A730}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB1A57D3-7FA7-4A73-BFA1-1D9F1E95A730}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB1A57D3-7FA7-4A73-BFA1-1D9F1E95A730}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4389B305-B381-4B50-B1A8-BBB5259A0524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4389B305-B381-4B50-B1A8-BBB5259A0524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4389B305-B381-4B50-B1A8-BBB5259A0524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4389B305-B381-4B50-B1A8-BBB5259A0524}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53E82AC1-DD1D-4C66-B55F-F9F4ACFB2F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E82AC1-DD1D-4C66-B55F-F9F4ACFB2F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E82AC1-DD1D-4C66-B55F-F9F4ACFB2F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E82AC1-DD1D-4C66-B55F-F9F4ACFB2F40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{801A0F89-D5F6-49A6-BCEA-6624388C98A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{801A0F89-D5F6-49A6-BCEA-6624388C98A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{801A0F89-D5F6-49A6-BCEA-6624388C98A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{801A0F89-D5F6-49A6-BCEA-6624388C98A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D22B5797-9F2A-4BA7-9636-6EFCE62EBE00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D22B5797-9F2A-4BA7-9636-6EFCE62EBE00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D22B5797-9F2A-4BA7-9636-6EFCE62EBE00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D22B5797-9F2A-4BA7-9636-6EFCE62EBE00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF723EB5-2500-4717-A828-0DE599C26A70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF723EB5-2500-4717-A828-0DE599C26A70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF723EB5-2500-4717-A828-0DE599C26A70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF723EB5-2500-4717-A828-0DE599C26A70}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

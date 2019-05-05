@@ -1,0 +1,169 @@
+﻿@model CRM.Models.AccountListVM
+@{
+    ViewBag.Title = "Account Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#From").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+            $("#To").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+        });
+    </script>
+}
+
+
+@section Title { @ViewBag.List }
+
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-users"></i> <label class="title">Account Search</label></h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            @using (Html.BeginForm("Result", "Account", FormMethod.Get, new { enctype = "multipart/form-data" }))
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        @*<div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.Salutation)</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(m => m.Salutation)
+                                <select id="filter-salutation" class="btn btn-default" style="width: 250px">
+                                    <option value='' disabled selected style='display:none;'>Choose Salutation</option>
+                                    <option value=''>All</option>
+                                    @foreach (var v in Helper.GetEnumList(typeof(Salutation)))
+                                    {
+                                        <option value="@v.Value">@v.Key</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>*@
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.FullName)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        @*<div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.Email)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            </div>
+                        </div>*@   
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.MSISDN, new { @class = "form-control" })
+                            </div>
+                        </div>                     
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.IdentityType)</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(m => m.IdentityType)
+                                <select id="filter-identity-type" class="btn btn-default" style="width: 250px">
+                                    <option value='' disabled selected style='display:none;'>Choose Identity Type</option>
+                                    <option value=''>All</option>
+                                    @foreach (var v in Helper.GetEnumList(typeof(IdentityType)))
+                                    {
+                                        <option value="@v.Value">@v.Key</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.IdentityNo)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.IdentityNo, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.Status)</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(m => m.Status)
+                                <select id="filter-status" class="btn btn-default" style="width: 250px">
+                                    <option value='' disabled selected style='display:none;'>Choose Status</option>
+                                    <option value=''>All</option>
+                                    @foreach (var v in Helper.GetEnumList(typeof(AccountStatus)))
+                                    {
+                                        <option value="@v.Value">@v.Key</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.AccountType)</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(m => m.AccountType)
+                                <select id="filter-accounttype" class="btn btn-default" style="width: 250px">
+                                    @foreach (var v in Helper.GetEnumList(typeof(AccountType)))
+                                    {
+                                        if (v.Value != ((int)AccountType.BillingLine).ToString())
+                                        { 
+                                        <option value="@v.Value">@v.Key</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="submit" class="btn btn-success" value="Search" onclick="reset_account_datatable_setting();" style="margin-top: -5px;" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $('select#filter-salutation').on('change', function (e) {
+        var optionSelected = $("option:selected", this).html();
+        var valueSelected = this.value;
+
+        $('input#Salutation').val(valueSelected);
+    });
+    $('select#filter-identity-type').on('change', function (e) {
+        var optionSelected = $("option:selected", this).html();
+        var valueSelected = this.value;
+
+        $('input#IdentityType').val(valueSelected);
+    });
+    $('select#filter-status').on('change', function (e) {
+        var optionSelected = $("option:selected", this).html();
+        var valueSelected = this.value;
+
+        $('input#Status').val(valueSelected);
+    });
+    $('select#filter-accounttype').on('change', function (e) {
+        var optionSelected = $("option:selected", this).html();
+        var valueSelected = this.value;
+
+        $('input#AccountType').val(valueSelected);
+    });
+
+    function reset_account_datatable_setting() {
+        localStorage.removeItem('DataTablesAccount');
+    }
+</script>

@@ -1,0 +1,113 @@
+﻿@model CRM.Models.ReportPaymentModel
+@{
+    ViewBag.Title = "Payment Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#From").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+            $("#To").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+        });
+    </script>
+}
+
+@section Title { @ViewBag.List }
+
+
+><div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-clipboard"></i> <label class="title">Payment Search</label></h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            @using (Html.BeginForm("PaymentResult", "Report", FormMethod.Get, new { enctype = "multipart/form-data" }))
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.PaymentMethod)</label>
+                            <div class="col-md-9">
+                                @{
+                                    List<SelectListItem> PaymentM = new List<SelectListItem>();
+                                    PaymentM.Add(new SelectListItem() { Text = "All", Value = "" });
+                                    PaymentM.Add(new SelectListItem(){ Text = "Credit Card", Value = "Credit Card" });
+                                    PaymentM.Add(new SelectListItem(){ Text = "Cash", Value = "Cash" });
+                                }
+                                @Html.DropDownListFor(m => m.PaymentMethod, PaymentM, null, new { @class = "form-control btn btn-default" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.PaymentType)</label>
+                            <div class="col-md-9">
+                                @{
+                                    List<SelectListItem> PaymentT = new List<SelectListItem>();
+                                    PaymentT.Add(new SelectListItem() { Text = "All", Value = "" });
+                                    PaymentT.Add(new SelectListItem() { Text = "Deposit", Value = "Deposit" });
+                                    PaymentT.Add(new SelectListItem() { Text = "Advance Payment", Value = "Advance Payment" });
+                                    PaymentT.Add(new SelectListItem() { Text = "Billing", Value = "Billing" });
+                                }
+                                @Html.DropDownListFor(m => m.PaymentType, PaymentT, null, new { @class = "form-control btn btn-default" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">From Date</label>
+                            <div class="col-md-9">
+                                <div class='input-group'>
+                                    @Html.TextBoxFor(m => m.From, new { @class = "form-control", @style = "width: 206px;", @readonly = true })
+                                    <div class='input-group-btn pull-left'>
+                                        <span class="btn btn-primary" onclick="$('#From').datepicker('show')">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">To Date</label>
+                            <div class="col-md-9">
+                                <div class='input-group'>
+                                    @Html.TextBoxFor(m => m.To, new { @class = "form-control", @style = "width: 206px;", @readonly = true })
+                                    <div class='input-group-btn pull-left'>
+                                        <span class="btn btn-primary" onclick="$('#To').datepicker('show')">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="submit" class="btn btn-success" value="Search" onclick="reset_payment_datatable_setting();" style="margin-top: -5px;" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function reset_payment_datatable_setting() {
+        localStorage.removeItem('DataTablesPayment');
+    }
+</script>

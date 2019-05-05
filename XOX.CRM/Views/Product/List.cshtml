@@ -1,0 +1,77 @@
+﻿@model List<CRM.Models.ProductModel>
+@{
+    ViewBag.Title = "Product List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    @Styles.Render("~/Content/tbltree")
+    @Scripts.Render("~/bundles/tbltree")
+}
+
+@section Title { @ViewBag.List }
+
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                @*<a href="@Url.Action("Registration","Product")">
+                    <button class="btn btn-success pull-right" style="margin-right:7px">
+                        <i class="fa fa-plus-circle"></i>Create Product
+                    </button>
+                </a>*@
+            </div>
+
+            <div class="line-light"></div>
+
+            <table id="tbltree" class="table table-striped">
+                <thead>
+                    <tr class="table-search">
+                        @*<th>@Html.LabelFor(m => m[0].ProductId)</th>*@
+                        <th>@Html.LabelFor(m => m[0].Description)</th>
+                        <th>@Html.LabelFor(m => m[0].Category)</th>
+                        <th>@Html.LabelFor(m => m[0].Level)</th>
+                        <th>@Html.LabelFor(m => m[0].Type)</th>
+                        <th>@Html.LabelFor(m => m[0].Price)</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr row-id="@v.ProductId">
+                            @*<td>@v.ProductId</td>*@
+                            <td>@v.Description</td>
+                            <td>@v.Category</td>
+                            <td>@v.Level</td>
+                            <td>@v.Type</td>
+                            <td>@v.Price</td>
+                        </tr>
+
+                        foreach (var y in v.Child)
+                        {
+                            <tr row-id="@y.ProductId" parent-id="@v.ProductId">
+                                @*<td>@y.ProductId</td>*@
+                                <td>@y.Description</td>
+                                <td>@y.Category</td>
+                                <td>@y.Level</td>
+                                <td>@y.Type</td>
+                                <td>@y.Price</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#tbltree").tbltree({
+            treeColumn: 0,
+            saveState: true,
+        });
+    });
+</script>

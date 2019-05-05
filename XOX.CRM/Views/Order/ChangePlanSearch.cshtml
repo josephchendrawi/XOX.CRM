@@ -1,0 +1,159 @@
+﻿@model CRM.Models.OrderListVM
+@{
+    ViewBag.Title = "Change Plan Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#From").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+            $("#To").datepicker({
+                yearRange: "-100:+0",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+        });
+    </script>
+
+
+    <script src="@Url.Content("~/Content/sumoselect/jquery.sumoselect.js")"></script>
+    <link href="@Url.Content("~/Content/sumoselect/sumoselect.css")" rel="stylesheet" />
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#filter-status').SumoSelect({
+                placeholder: 'Choose Status',
+                csvDispCount: 2,
+                selectAll: true,
+                selectAlltext: 'All'
+            });
+            $('.SlectBox').addClass("btn btn-default");
+        });
+    </script>
+}
+
+@section Title { @ViewBag.List }
+
+
+><div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-clipboard"></i> <label class="title">Order Search</label></h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            @using (Html.BeginForm("ChangePlanResult", "Order", FormMethod.Get, new { enctype = "multipart/form-data" }))
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.OrderNum)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.OrderNum, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.MSISDN, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.FullName)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">From Date</label>
+                            <div class="col-md-9">
+                                <div class='input-group'>
+                                    @Html.TextBoxFor(m => m.From, new { @class = "form-control", @style = "width: 206px;", @readonly = true })
+                                    <div class='input-group-btn pull-left'>
+                                        <span class="btn btn-primary" onclick="$('#From').datepicker('show')">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">To Date</label>
+                            <div class="col-md-9">
+                                <div class='input-group'>
+                                    @Html.TextBoxFor(m => m.To, new { @class = "form-control", @style = "width: 206px;", @readonly = true })
+                                    <div class='input-group-btn pull-left'>
+                                        <span class="btn btn-primary" onclick="$('#To').datepicker('show')">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">@Html.LabelFor(model => model.Status)</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(m => m.Status)
+                                <select id="filter-status" class="btn btn-default" style="width: 250px" multiple="multiple">
+                                    <option value="Incomplete">Incomplete</option>
+                                    <option value="Complete">Complete</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="submit" class="btn btn-success" value="Search" onclick="reset_order_datatable_setting();" style="margin-top: -5px;" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    //$('select#filter-status').on('change', function (e) {
+    //    var optionSelected = $("option:selected", this).html();
+    //    var valueSelected = this.value;
+
+    //    $('input#Status').val(valueSelected);
+    //});
+    $('select#filter-category').on('change', function (e) {
+        var optionSelected = $("option:selected", this).html();
+        var valueSelected = this.value;
+
+        $('input#Category').val(valueSelected);
+    });
+
+    function reset_order_datatable_setting() {
+        localStorage.removeItem('DataTablesChangePlanOrder');
+    }
+
+    $("form").submit(function (event) {
+        var valueSelected = "";
+        $('.SumoSelect ul.options li.selected').each(function () {
+            if (valueSelected == "") {
+                valueSelected += $(this).text();
+            }
+            else {
+                valueSelected += "|" + $(this).text();
+            }
+        });
+        $('input#Status').val(valueSelected);
+    });
+</script>

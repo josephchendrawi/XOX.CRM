@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Payment Card Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Title { @ViewBag.List }
+
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-credit-card"></i> <label class="title">Payment Card Report</label></h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-3 col-sm-6" style="padding: 0;">
+                    <b>Card Type</b>
+                    <br />
+                    <select class="btn btn-default btn-flat form-control" id="qCardType">
+                        <option value=''>All</option>
+                        @foreach (var v in Helper.GetEnumList(typeof(CardType), true)) { 
+                            <option value="@v.Value">@v.Key</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 col-sm-6" style="padding: 0;">
+                    <b>Expire within</b>
+                    <br />
+                    <input type="text" class="form-control inline" style="width: 50px;" id="qWithinMonths" /> month(s)
+                </div>
+            </div>
+            <div class="line-light"></div>
+            <div>
+                <button class="btn btn-default" id="btn-download"><i class="fa fa-download"></i> Download Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btn-download").click(function () {
+            var CardType = $("#qCardType option:selected").val();
+            var WithinMonths = $('#qWithinMonths').val();
+            window.location.href = "@Url.Action("GetPaymentCardDetailsExcel", "Report")?CardType=" + CardType + "&WithinMonths=" + WithinMonths;
+        });
+    });
+</script>
+
+

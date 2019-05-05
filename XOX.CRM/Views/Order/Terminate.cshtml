@@ -1,0 +1,55 @@
+﻿@model CRM.Models.TerminateVM
+@{
+    ViewBag.Title = "Terminate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+}
+
+<div id="main_content" class="clearfix form-horizontal view-content">
+    @using (Html.BeginForm("Terminate", "Order", FormMethod.Post, new { enctype = "multipart/form-data", id = "form-update" }))
+    {
+        @Html.HiddenFor(m => m.AccountId)
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriptionActivationDate)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.SubscriptionActivationDate
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SubscriptionContract)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.SubscriptionContract
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.OutstandingAmount)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.OutstandingAmount
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.DepositAmount)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.DepositAmount
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.SettlementAmount)</label>
+                            <div class="col-md-8 text-offset">
+                                @Model.SettlementAmount
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <input type="submit" value="Submit" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }

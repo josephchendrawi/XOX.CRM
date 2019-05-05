@@ -1,0 +1,323 @@
+﻿@model CRM.Models.ServiceRequestModel
+@{
+    ViewBag.Title = "Service Request Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts{
+    @Styles.Render("~/Content/fancybox")
+    @Scripts.Render("~/bundles/fancybox")
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        $(function () {
+            $("#tabs-min").tabs();
+            $("#tabs-min").on("click", function () { $("#tabs-min").ScrollTo(); });
+        });
+
+        $(document).ready(function () {
+            $("#date").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd M yy',
+                showAnim: 'slideDown',
+                showOn: '',
+                showOtherMonths: true,
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            });
+        });
+        $('.fancybox').fancybox();
+    </script>
+}
+
+<div id="main_content" class="clearfix form-horizontal">
+    @using (Html.BeginForm("Add", "ServiceRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(model => model.AccountId)
+        @Html.HiddenFor(model => model.ServiceRequestId)
+        @Html.HiddenFor(model => model.MSISDN)
+        @Html.HiddenFor(model => model.OldLimit)
+        @Html.HiddenFor(model => model.DueDate)
+        @Html.HiddenFor(model => model.NewLimit)
+        @Html.HiddenFor(model => model.SimMSISDN)
+        @Html.HiddenFor(model => model.OldSIMNumber)
+        @Html.HiddenFor(model => model.NewSIMNumber)
+        @Html.HiddenFor(model => model.Resolution)
+
+        <div class="box box-default">
+            <div class="box-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Category)</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListForKeyPairList(m => m.Category, "ServiceRequestCategory", new { @class = "btn btn-primary" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Assignee)</label>
+                            <div class="col-md-8">
+                                <input type="text" class="btn btn-default" name="Assignee" value="@Session["UserEmail"]" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Priority)</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListForEnum(m => m.Priority, typeof(Priority), new { @class = "btn btn-primary" })
+                            </div>
+                        </div>
+                        @*<div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.DueDate)</label>
+                            <div class="col-md-8">
+                                <div class='input-group'>
+                                    @Html.TextBoxFor(m => m.DueDate, new { @id = "date", @class = "form-control", @Value = Model.DueDate.ToString("dd MMM yyyy"), @style = "width: 85%;" })
+                                    <div class='input-group-btn pull-left'>
+                                        <span class="btn btn-primary" onclick="$('#date').datepicker('show')">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Status)</label>
+                            <div class="col-md-8 text-offset">
+                                @Html.DropDownListForEnum(m => m.Status, typeof(ServiceRequestStatus), new { @class = "btn btn-primary" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Resolution)</label>
+                            <div class="col-md-8">
+                                <input type="text" class="btn btn-default" value="@ServiceRequestResolution.Open.ToString()" readonly />
+                                @*@Html.DropDownListForEnum(m => m.Resolution, typeof(ServiceRequestResolution), new { @class = "btn btn-primary" })*@
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Description)</label>
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @cols = 80, @rows = 7, @style = "resize: none;" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabs-min" style="display: none;">
+            <ul>
+                <li><a href="#tabs-attachment"><i class="fa fa-files-o"></i><span>Attachment</span></a></li>
+                <li><a href="#tabs-note"><i class="fa fa-book"></i><span>Notes</span></a></li>
+                <li><a href="#tabs-activity"><i class="fa fa-list"></i><span>Activity</span></a></li>
+            </ul>
+
+            <div id="tabs-attachment">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="file" name="files" id="files" multiple="multiple" style="display: none;" />
+                        <span class="btn btn-success" id="btn-browse">Add Files</span>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="files-info" class="tabs-infobox"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tabs-note">
+                <input type="hidden" name="note-add" id="note-add" />
+                <table class="table table-striped" id="tbl-list-note">
+                    <thead>
+                        <tr>
+                            <th style="width: 1px;"></th>
+                            <th style="width: 500px;"><label>Note</label></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tbl-note">
+                        <tr>
+                            <td></td>
+                            <td><input type="text" class="form-control" style="width: 100%;" id="note-txt"/></td>
+                            <td><span class="btn btn-success" onclick="addnote();">Add</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="tabs-activity">
+                <table class="table table-striped" id="tbl-list-activity">
+                    <thead>
+                        <tr>
+                            <th style="width: 1px;"></th>
+                            <th class=""><label>Visit Date Time</label></th>
+                            <th class=""><label>Field Staff</label></th>
+                            <th class=""><label>Status</label></th>
+                            <th class=""><label>Notes</label></th>
+                            @*<th class="w50"></th>*@
+                        </tr>
+                    </thead>
+
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+          
+        <div class="content-footer">      
+            <div>
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+    $("#btn-browse").click(function () {
+        $("#files").click();
+    });
+
+    $('#files').change(function () {
+        //var html = "<div class='padding-top-bottom-12'>";
+
+        $('#files-info').html("");
+        var files = $("#files")[0].files;
+        for (var i = 0; i < files.length; i++) {
+            var size;
+            if (files[i].size > 1048576) {
+                size = (files[i].size / 1048576).toFixed(1);
+                size += " MB";
+            }
+            else if (files[i].size > 1024) {
+                size = (files[i].size / 1024).toFixed(1);
+                size += " KB";
+            }
+            else {
+                size = files[i].size;
+                size += " B";
+            }
+
+            var reader = new FileReader();
+            reader.fileName = files[i].name;
+            reader.Size = size;
+            reader.fileType = files[i].name.substring(files[i].name.lastIndexOf('.') + 1);
+            reader.onload = function (e) {
+                var img = "<div class='img-center fa fa-file-text'></div>";
+                var type = e.target.fileType;
+                if (type == "jpg" || type == "jpeg" || type == "png" || type == "gif") {
+                    img = "<img src='" + e.target.result + "' class='img-responsive-flex-landscape img-center' />";
+                }
+                var imghtml = "<div class=\"img-wrapper\">"
+                        + "<a href='" + e.target.result + "' class='fancybox' title='" + e.target.fileName + " - " + e.target.Size + "'>"
+                        + "<div class='img-box-round'>"
+                        + img
+                        + "</div>"
+                        + "</a>"
+                        + "</div>";
+                $('#files-info').append(imghtml);
+            }
+            reader.readAsDataURL(files[i]);
+
+            //html += "<div class='row'><span class='col-xs-4 col-md-1 text-right text-bold-500'>" + size + "</span><span class='col-xs-8 col-md-5'>" + files[i].name + "</span></div>";
+        }
+        //html += "</div>";
+        //html += "<div class='row'><span class='col-xs-4 col-md-1 text-right'><span class='text-primary text-bold'>" + files.length + "</span> file(s)</span></div>";
+
+        //$('#files-info').html(html);
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(function () {
+        loadListTable();
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list-activity").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListActivity", "ServiceRequest")?ServiceRequestId=@Model.ServiceRequestId",
+            "bProcessing": true,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "aoColumns": [
+                    {
+                        "mData": "ActivityId",
+                        "sName": "ActivityId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='hidden' value='" + Obj.aData['ActivityId'] + "' name='ActivityId[]' />";
+                        }
+                    },
+                    {
+                        "mData": "VisitDateTimeText",
+                        "sWidth": "20%"
+                    },
+                    {
+                        "mData": "FieldStaff",
+                        "sWidth": "25%"
+                    },
+                    {
+                        "mData": "Status",
+                        "sWidth": "20%"
+                    },
+                    {
+                        "mData": "Notes",
+                        "bSortable": false,
+                        "sWidth": "35%"
+                    }
+            ]
+        });
+
+        //add class to jquery.datatables filter
+        $('.dataTables_length select').addClass("btn btn-primary");
+        $('.dataTables_filter input').addClass("form-control");
+    }
+</script>
+
+<script type="text/javascript">
+    $("#Category").change(function () {
+        if (this.value == "UpdateCreditLimit") {
+            $('#upgrade-credit-limit').show();
+            $('#sim-replacement').hide();
+        }
+        else {
+            $('#upgrade-credit-limit').hide();
+            $('#sim-replacement').show();
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    function addnote() {
+        var note = $('input#note-txt').val();
+
+        if (note != "") {
+            var html = "<tr>"
+                    + "<td></td>"
+                    + "<td>" + note + "</td>"
+                    + "<td></td>"
+                    + "</tr>";
+
+            $('tbody#tbl-note').prepend(html);
+
+            $('input#note-add').val($('input#note-add').val() + "|" + note);
+        }
+
+        $('input#note-txt').val('');
+        $('input#note-txt').focus();
+
+        console.log($('input#note-add').val());
+    }
+</script>
+
+<style>
+    .form-group input, .form-group select, .form-group textarea {
+        width: 200px;
+    }
+</style>

@@ -1,0 +1,2 @@
+alter table XOX_T_ACCNT
+add REGISTRATION_DT datetime

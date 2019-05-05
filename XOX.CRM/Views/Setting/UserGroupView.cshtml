@@ -1,0 +1,134 @@
+﻿@model CRM.Models.UserGroupModel
+@{
+    ViewBag.Title = "User Group View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+@section scripts {
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+}
+
+<div id="main_content" class="clearfix form-horizontal view-content">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-group"></i> <label class="title">User Group Information</label></h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.GroupCode)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.GroupCode
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="col-md-4 control-label">@Html.LabelFor(model => model.Description)</label>
+                        <div class="col-md-8 text-offset">
+                            @Model.Description
+                        </div>
+                    </div>
+                    
+                    <div class="line-light"></div>
+
+                    <table class="table table-striped" id="tbl-list">
+                        <thead>
+                            <tr>
+                                <th class="w50"></th>
+                                <th class="">Username</th>
+                                <th class="">Staff Name</th>
+                                <th class=""></th>
+                                <th class=""></th>
+                            </tr>
+                        </thead>
+
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        loadListTable();
+
+        $("#tbl-list").on("click", "[name='editBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='Id[]']").val();
+
+            window.location.href = "@Url.Action("UserEdit", "Setting")/" + Id;
+        })
+
+        $("#tbl-list").on("click", "[name='viewBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='Id[]']").val();
+
+            window.location.href = "@Url.Action("UserView", "Setting")/" + Id;
+        })
+
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListUser", "Setting")?UserGroupId=@Model.Id",
+            "bProcessing": true,
+            "aoColumns": [
+                    {
+                        "mData": "Id",
+                        "sName": "Id",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='checkbox' value='" + Obj.aData['Id'] + "' name='chk_Id[]' />" +
+                                "<input type='hidden' value='" + Obj.aData['Id'] + "' name='Id[]' />";
+                        }
+                    },
+                    { "mData": "Username" },
+                    {
+                        "mData": "StaffName",
+                        "fnRender": function (Obj) {
+                            if (Obj.aData['StaffName'] == null || Obj.aData['StaffName'] == "") {
+                                return "-";
+                            }
+                            else {
+                                return Obj.aData['StaffName'];
+                            }
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="viewBtn[]">' +
+                                '<i class="fa fa-eye"></i> View</a>';
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="editBtn[]">' +
+                                '<i class="fa fa-edit"></i> Edit</a>';
+                        }
+                    }
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            }
+        });
+
+        $('.dataTables_length select').addClass("btn btn-primary");
+        $('.dataTables_filter input').addClass("form-control");
+    }
+</script>

@@ -1,0 +1,141 @@
+﻿@model CRM.Models.PaymentModel
+@{
+    ViewBag.Title = "Create Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Title { @ViewBag.List }
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-money"></i> <label class="title">Create Payment</label></h3>
+        </div>
+        <!-- /.box-header -->
+        @using (Html.BeginForm("CreatePayment", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(m => m.AccountId);
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.MSISDN)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.MSISDN, new { @class = "form-control", @readonly = true })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.PaymentMethod)</label>
+                            <div class="col-md-8">
+                                @{
+                                    List<SelectListItem> PaymentM = new List<SelectListItem>();
+                                    PaymentM.Add(new SelectListItem(){ Text = "Credit Card", Value = "Credit Card" });
+                                    PaymentM.Add(new SelectListItem(){ Text = "Cash", Value = "Cash" });
+                                }
+                                @Html.DropDownListFor(m => m.PaymentMethod, PaymentM, null, new { @class = "form-control btn btn-default" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Amount) (< @Helper.GetLookupValByName("Payment Limit", "Payment Limit"))</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Amount, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Reference)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Reference, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div id="card-info">
+                            <div class="form-group clearfix">
+                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.CardIssuerBank)</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownListForKeyPairList(m => m.CardIssuerBank, "Bank Name", new { @class = "btn btn-default form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.CardType)</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownListForEnum(m => m.CardType, typeof(CardType), new { @class = "btn btn-default form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-4 control-label">@Html.LabelFor(model => model.CardNumber)</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-4 control-label">Card Expiry</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(m => m.CardExpiryMonth, new SelectList(Enumerable.Range(1, 12)), "Month", new { @class = "btn btn-default" })
+                                    @Html.DropDownListFor(m => m.CardExpiryYear, new SelectList(Helper.GetYearList()), "Year", new { @class = "btn btn-default" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="button" class="btn btn-success" value="Submit" style="margin-top: -5px;" id="btn-submit" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div id="confirmation" class="text-center" style="width: 400px; display:none;">
+    <h4><b>Are you sure to make this payment?</b></h4>
+    <h2 id="text-amount"></h2>
+    <h5>for MSISDN</h5>
+    <h3 id="text-msisdn" style="margin: 0 0 20px 0;"></h3>
+    <input type="button" class="btn btn-success" id="btn-submit-conf" value="Submit" onclick="$('form').trigger('submit');" />
+    <br />
+</div>
+
+<script>
+    $(function () {
+        $('select#PaymentMethod').on('change', function (e) {
+            var optionSelected = $("option:selected", this).html();
+            var valueSelected = this.value;
+
+            if (valueSelected == 'Credit Card') {
+                $('#card-info').show();
+            }
+            else if (valueSelected == 'Cash') {
+                $('#card-info').hide();
+            }
+        });
+
+        //disable double click Submit button on confirmation page
+        $("#btn-submit-conf").one('click', function (event) {
+            event.preventDefault();
+            //do something
+            $(this).prop('disabled', true);
+        });
+    });
+</script>
+
+@Styles.Render("~/Content/fancybox")
+@Scripts.Render("~/bundles/fancybox")
+<script>
+    $(function () {
+        $("#Amount").change(function () {
+            if (parseFloat($(this).val()) > parseFloat('@Helper.GetLookupValByName("Payment Limit", "Payment Limit")')) {
+                $('#btn-submit').prop('disabled', true);
+                $('#Amount').focus();
+            }
+            else {
+                $('#btn-submit').prop('disabled', false);
+            }
+        });
+
+        $('#btn-submit').click(function () {
+            $('#text-amount').html('RM ' + $('#Amount').val());
+            $('#text-msisdn').html($('#MSISDN').val());
+            $.fancybox.open([{
+                href: '#confirmation'
+            }]);
+            return false;
+        });
+    });
+</script>

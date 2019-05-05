@@ -1,0 +1,156 @@
+﻿@model CRM.Models.AssetModel
+@{
+    ViewBag.Title = "Asset List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+}
+
+@section Title { @ViewBag.List }
+
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-body">
+            <div id="searchForm" style="display: none;">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6" style="padding: 0;">
+                        @Html.LabelFor(m => m.MSISDN)
+                        <input type="text" class="form-control" id="qMSISDN" />
+                    </div>
+                    <div class="col-md-3 col-sm-6" style="padding: 0;">
+                        @Html.LabelFor(m => m.Plan)
+                        <br />
+                        <select class="btn btn-default btn-flat form-control" id="qPlan">
+                            <option value=''>All</option>
+                            <option value="Super 58">Super 58</option>
+                            <option value="Ultra 108">Ultra 108</option>
+                            <option value="Pro 158">Pro 158</option>
+                            <option value="Lightning 58">Lightning 58</option>
+                            <option value="Lightning 108">Lightning 108</option>
+                            <option value="Premium 150">Premium 150</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <button class="btn btn-default" id="btn-search"><i class="fa fa-search"></i> Search</button>
+            <button class="btn btn-default" id="btn-download"><i class="fa fa-download"></i> Download Report</button>
+
+            <table class="table table-striped table-compact" id="tbl-list">
+                <thead>
+                    <tr>
+                        <th class="">@Html.LabelFor(model => model.MSISDN)</th>
+                        <th class="">@Html.LabelFor(model => model.SubscriberName)</th>
+                        <th class="">@Html.LabelFor(model => model.Status)</th>
+                        <th class="">@Html.LabelFor(model => model.EffectiveDate)</th>
+                        <th class="">@Html.LabelFor(model => model.Plan)</th>
+                        <th class="">@Html.LabelFor(model => model.PrintedBilling)</th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        loadListTable();
+
+
+        $("#btn-download").click(function () {
+            var MSISDN = $('#qMSISDN').val();
+            var Plan = $("#qPlan option:selected").val();
+
+            window.location.href = "@Url.Action("GetAssetExcel", "Report")?MSISDN=" + MSISDN + "&Plan=" + Plan;
+        });
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListAsset", "Report")",
+            "bProcessing": true,
+            "iDisplayLength": 50,
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('DataTablesAsset', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('DataTablesAsset'));
+            },
+            "sDom": 'ir<"top"lp>t<"bottom"><"clear">',
+            "aoColumns": [
+                    {
+                        "mData": "MSISDN",
+                        "sName": "MSISDN",
+                        "fnRender": function (Obj) {
+                            return Obj.aData['MSISDN'] +
+                                "<input type='hidden' value='" + Obj.aData['AssetId'] + "' name='OrderId[]' />";
+                        }
+                    },
+                    {
+                        "mData": "SubscriberName"
+                    },
+                    {
+                        "mData": "Status"
+                    },
+                    {
+                        "mData": "EffectiveDate"
+                    },
+                    {
+                        "mData": "Plan"
+                    },
+                    {
+                        "mData": "PrintedBilling"
+                    },
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            },
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                var MSISDN = $('#qMSISDN').val();
+                var Plan = $("#qPlan option:selected").val();
+
+                var parameter = "?MSISDN=" + MSISDN + "&Plan=" + Plan;
+
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource + parameter,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            }
+        });
+
+        //hide filter box
+        $('.dataTables_filter').hide();
+        //add class to jquery.datatables filter
+        $('.dataTables_length select').addClass("btn btn-default");
+        $('.dataTables_filter input').addClass("form-control");
+        
+        $("#btn-search").click(function () {
+            if ($('#searchForm').is(':visible') == false) {
+                $('#searchForm').show("blind");
+            }
+            else {
+                oTable.fnDraw();
+            }
+        });
+    }
+</script>
+
+

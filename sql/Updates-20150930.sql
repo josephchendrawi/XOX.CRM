@@ -1,0 +1,19 @@
+alter table xox_t_accnt_act
+drop column install_dt;
+
+alter table xox_t_order_item
+drop column radius_group_cd;
+alter table xox_t_order_item
+drop column end_dt;
+alter table xox_t_order_item
+drop column cip_price;
+alter table xox_t_order_item
+drop column subnet_mask;
+alter table xox_t_order_item
+drop column etc_flg;
+alter table xox_t_order_item
+drop column otc_remarks;
+alter table xox_t_order_item
+drop column otc_type;
+alter table xox_t_order_item
+drop column old_service_num;

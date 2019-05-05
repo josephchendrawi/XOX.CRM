@@ -1,0 +1,33 @@
+﻿@model CRM.Models.BatchWorkEmail
+@{
+    ViewBag.Title = "Batch Work Email Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Title { @ViewBag.Title }
+
+<div id="main_content" class="clearfix form-horizontal">
+    @using (Html.BeginForm("AddEmail", "BatchWork", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(m => m.BatchWorkId)
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label">@Html.LabelFor(model => model.Email)</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+          
+        <div class="content-footer">      
+            <div>
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</div>

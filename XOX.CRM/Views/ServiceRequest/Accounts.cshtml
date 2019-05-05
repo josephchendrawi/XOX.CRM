@@ -1,0 +1,103 @@
+﻿@model CRM.Models.AccountListVM
+@{
+    ViewBag.Title = "Account List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <!-- datatable -->
+    <script src="~/Content/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Content/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+    <link href="~/Content/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+}
+
+@section Title { @ViewBag.List }
+
+
+<div id="main_content" class="clearfix">
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                Account List
+            </div>
+
+            <div class="line-light"></div>
+
+            <table class="table table-striped" id="tbl-list">
+                <thead>
+                    <tr>
+                        <th class="w50"></th>
+                        <th class="">@Html.LabelFor(model => model.Salutation)</th>
+                        <th class="">@Html.LabelFor(model => model.FullName)</th>
+                        <th class="">@Html.LabelFor(model => model.Email)</th>
+                        <th class="">@Html.LabelFor(model => model.IdentityType)</th>
+                        <th class="">@Html.LabelFor(model => model.IdentityNo)</th>
+                        <th class=""></th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        loadListTable();
+
+        $("#tbl-list").on("click", "[name='viewBtn[]']", function () {
+            var tr = $(this).closest("tr");
+            var Id = tr.find("[name='AccountId[]']").val();
+
+            window.location.href = "@Url.Action("Requests", "ServiceRequest")?AccountId=" + Id;
+        })
+
+    });
+
+    function loadListTable() {
+        var oTable = $("#tbl-list").DataTable({
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("ListAccount", "Account")",
+            "bProcessing": true,
+            "aoColumns": [
+                    {
+                        "mData": "AccountId",
+                        "sName": "AccountId",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "fnRender": function (Obj) {
+                            return "<input type='checkbox' value='" + Obj.aData['AccountId'] + "' name='chk_AccountId[]' />" +
+                                "<input type='hidden' value='" + Obj.aData['AccountId'] + "' name='AccountId[]' />";
+                        }
+                    },
+                    { "mData": "Salutation" },
+                    { "mData": "FullName" },
+                    { "mData": "Email" },
+                    { "mData": "IdentityType" },
+                    { "mData": "IdentityNo" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full) {
+                            return '<a class="btn btn-md" name="viewBtn[]">' +
+                                '<i class="fa fa-align-left"></i> View Service Request</a>';
+                        }
+                    }
+            ],
+            "fnDrawCallback": function (oSettings) {
+                //table loaded event
+                $("#tbl-list > tbody input[type=checkbox]").iCheck({
+                    checkboxClass: 'icheckbox_square-blue'
+                });
+            }
+        });
+
+        //add class to jquery.datatables filter
+        $('.dataTables_length select').addClass("btn btn-primary");
+        $('.dataTables_filter input').addClass("form-control");
+    }
+</script>
+
